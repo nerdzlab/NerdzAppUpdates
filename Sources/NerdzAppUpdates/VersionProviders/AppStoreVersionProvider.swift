@@ -14,13 +14,14 @@ public class AppStoreVersionProvider: VersionProviderType {
         static let iTunesBaseUrl = URL(string: "https://itunes.apple.com")!
     }
     
+    private let appStoreEndpoint: Endpoint
     public var country: AppStoreCountry
     
     public init(country: AppStoreCountry = .unitedStates) {
         self.country = country
+        self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
     }
     
-    private lazy var appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
     
     private func handleGetAppInfoRequestSuccess(with data: AppStoreResponseApiModel, completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
         
