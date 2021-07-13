@@ -8,7 +8,7 @@
 import Foundation
 import NerdzNetworking
 
-public class ServerVersionProvider<ServerRequest: Request>: VersionProviderType where ServerRequest.ResponseObjectType: ServerVersionResponseType {
+public class ServerVersionProvider<ServerRequest: Request>: NSObject, VersionProviderType where ServerRequest.ResponseObjectType: ServerVersionResponseType {
 
     private let request: ServerRequest
     private let endpoint: Endpoint
@@ -16,6 +16,8 @@ public class ServerVersionProvider<ServerRequest: Request>: VersionProviderType 
     public init(_ request: ServerRequest, endpoint: Endpoint) {
         self.request = request
         self.endpoint = endpoint
+        
+        super.init()
     }
     
     private func handleGetAppInfoRequestSuccess(

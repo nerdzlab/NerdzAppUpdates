@@ -7,6 +7,6 @@
 
 import Foundation
 
-public protocol VersionProviderType: class {
+public protocol VersionProviderType: NSObject {
     func verifyAppVersion(completion: @escaping AppUpdateAction)
 }

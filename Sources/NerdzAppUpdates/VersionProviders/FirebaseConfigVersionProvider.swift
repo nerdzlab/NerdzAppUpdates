@@ -9,7 +9,7 @@ import Foundation
 import FirebaseRemoteConfig
 import NerdzUtils
 
-public struct FirebaseConfigVersionProvider: VersionProviderType {
+public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     
     private enum Constants {
         enum Keys {

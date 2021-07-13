@@ -8,7 +8,7 @@
 import Foundation
 import NerdzNetworking
 
-public class AppStoreVersionProvider: VersionProviderType {
+public class AppStoreVersionProvider: NSObject, VersionProviderType {
    
     private enum Constants {
         static let iTunesBaseUrl = URL(string: "https://itunes.apple.com")!
@@ -21,6 +21,8 @@ public class AppStoreVersionProvider: VersionProviderType {
         self.country = country
         self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
         Endpoint.default = appStoreEndpoint
+        
+        super.init()
     }
     
     
