@@ -16,7 +16,7 @@ let package = Package(
         // Dependencies declare other packages that this package depends on.
         .package(name: "NerdzNetworking", url: "https://github.com/nerdzlab/NerdzNetworking.git", from: "1.1.2"),
         .package(name: "NerdzUtils", url: "https://github.com/nerdzlab/NerdzUtils.git", from: "1.0.66"),
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .exact("8.3.0"))
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "8.3.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
