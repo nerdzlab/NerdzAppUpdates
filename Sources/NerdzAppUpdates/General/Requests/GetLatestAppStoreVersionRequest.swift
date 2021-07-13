@@ -18,7 +18,7 @@ struct GetLatestAppStoreVersionRequest: Request {
     let queryParams: [(String, String)]
     
     init(bundleId: String, countryCode: String? = nil) {
-        var parameters = [("id", bundleId)]
+        var parameters = [("bundleId", bundleId)]
         
         if let code = countryCode {
             parameters.append(("country", code))

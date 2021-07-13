@@ -20,6 +20,7 @@ public class AppStoreVersionProvider: VersionProviderType {
     public init(country: AppStoreCountry = .unitedStates) {
         self.country = country
         self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
+        Endpoint.default = appStoreEndpoint
     }
     
     
@@ -53,9 +54,11 @@ public class AppStoreVersionProvider: VersionProviderType {
         GetLatestAppStoreVersionRequest(bundleId: bundleId, countryCode: country.code)
             .execute(on: appStoreEndpoint)
             .onSuccess { [weak self] response in
+                print(response)
                 self?.handleGetAppInfoRequestSuccess(with: response, completion: completion)
             }
             .onFail { error in
+                print(error)
                 completion(.failure(.apiError(error.message)))
             }
     }
