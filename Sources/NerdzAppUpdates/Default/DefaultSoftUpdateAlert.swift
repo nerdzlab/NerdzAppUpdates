@@ -9,14 +9,14 @@ import UIKit
 
 public extension SoftUpdateMode {
     
-    private enum Constants {
+    public enum Constants {
         static let defaultAlertTitle = "Update Available"
         static let defaultAlertMessage = "A new version of app is available. Would you like to update now or later?"
         static let defaultUpdateActionMessage = "Update now"
         static let defaultSkipActionMessage = "Skip for now"
     }
     
-    init(
+    public init(
         alertTitle: String = Constants.defaultAlertTitle,
         alertMessage: String? = Constants.defaultAlertMessage,
         alertUpdateButtonTitle: String = Constants.defaultUpdateActionMessage,
