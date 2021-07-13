@@ -13,7 +13,7 @@ struct GetLatestAppStoreVersionRequest: Request {
     typealias ResponseObjectType = AppStoreResponseApiModel
     typealias ErrorType = AppStoreErrorResponseModel
     
-    let path: String = "lookup"
+    let path: String = "/lookup"
     let method: HTTPMethod = .get
     let queryParams: [(String, String)]
     
