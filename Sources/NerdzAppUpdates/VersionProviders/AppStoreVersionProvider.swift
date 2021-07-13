@@ -16,7 +16,7 @@ public class AppStoreVersionProvider: VersionProviderType {
     
     public var country: AppStoreCountry
     
-    init(country: AppStoreCountry = .unitedStates) {
+    public init(country: AppStoreCountry = .unitedStates) {
         self.country = country
     }
     

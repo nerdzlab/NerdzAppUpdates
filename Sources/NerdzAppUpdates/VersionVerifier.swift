@@ -13,7 +13,7 @@ public class VersionVerifier {
     private let hardUpdateMode: HardUpdateMode
     private let versionDataProvider: VersionProviderType
     
-    init(versionDataProvider: VersionProviderType, softUpdateMode: SoftUpdateMode, hardUpdateMode: HardUpdateMode) {
+    public init(versionDataProvider: VersionProviderType, softUpdateMode: SoftUpdateMode, hardUpdateMode: HardUpdateMode) {
         self.softUpdateMode = softUpdateMode
         self.hardUpdateMode = hardUpdateMode
         self.versionDataProvider = versionDataProvider

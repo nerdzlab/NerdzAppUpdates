@@ -13,7 +13,7 @@ public class ServerVersionProvider<ServerRequest: Request>: VersionProviderType 
     private let request: ServerRequest
     private let endpoint: Endpoint
 
-    init(_ request: ServerRequest, endpoint: Endpoint) {
+    public init(_ request: ServerRequest, endpoint: Endpoint) {
         self.request = request
         self.endpoint = endpoint
     }
