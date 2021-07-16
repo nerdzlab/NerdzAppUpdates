@@ -63,16 +63,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 ```
 Let's go through some important lines of code of above mentioned snippet.
-Line 1 - import library
-Line 2 - initializition of version provider
-Line 3 - version verifier object initialization
-Line 4 - passing custom screen for loading indication, typicaly is copy of app launch storyboard with loading indicator
-Line 5 - passing soft update configuration, where `SoftUpdateScreen()` is screen that provides user posibility to open app distribution service,
+  - Line 1 - import library
+  - Line 2 - initializition of version provider
+  - Line 3 - version verifier object initialization
+  - Line 4 - passing custom screen for loading indication, typicaly is copy of app launch storyboard with loading indicator
+  - Line 5 - passing soft update configuration, where `SoftUpdateScreen()` is screen that provides user posibility to open app distribution service,
 or skip an update, and `animated` - is boolean option to animate dissapearing of screen mentioned above or not
-Line 6 - passing hard update configuration with screen which should be displayed in case hard update is needed
-Line 7 - calling a use defined function to trigger start of version verification
-Line 8 - calling library function 
-Line 9 - displaying error in case of verification check
+  - Line 6 - passing hard update configuration with screen which should be displayed in case hard update is needed
+  - Line 7 - calling a use defined function to trigger start of version verification
+  - Line 8 - calling library function 
+  - Line 9 - displaying error in case of verification check
 
 ## Warning, posible errors. 
   1. Make sure to store reference to versionVerifier object, so this object won't be deinited before the version check is completed.
