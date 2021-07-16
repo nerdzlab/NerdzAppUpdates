@@ -122,7 +122,8 @@ public class VersionVerifier {
     private func startLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            screen.onStartLoading?()
+            screen.presentAsOverlay()
+            screen.startLoading()
         case .custom(let onStartLoading, _):
             onStartLoading?()
         case .none: break
@@ -133,7 +134,8 @@ public class VersionVerifier {
     private func stopLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            screen.onStopLoading?()
+            try? screen.dismissOverlay()
+            screen.stopLoading()
         case .custom(_, let onStopLoading):
             onStopLoading?()
         case .none: break
