@@ -7,6 +7,7 @@
 
 import Foundation
 import NerdzNetworking
+import Version
 
 public class AppStoreVersionProvider: NSObject, VersionProviderType {
    
@@ -17,7 +18,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
     private let appStoreEndpoint: Endpoint
     public var country: AppStoreCountry
     
-    public init(country: AppStoreCountry = .unitedStates) {
+    public init(country: AppStoreCountry) {
         self.country = country
         self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
         Endpoint.default = appStoreEndpoint
@@ -28,7 +29,12 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
     
     private func handleGetAppInfoRequestSuccess(with data: AppStoreResponseApiModel, completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
         
-        guard let currentAppVersion = Bundle.main.currentAppVersion else {
+        guard let currentAppVersionString = Bundle.main.appVersion else {
+            completion(.failure(.failedToRetreiveCurrentVersion))
+            return
+        }
+        
+        guard let currentAppVersion = try? Version(currentAppVersionString) else {
             completion(.failure(.failedToRetreiveCurrentVersion))
             return
         }
@@ -38,13 +44,20 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
             return
         }
         
-        guard DataParser.checkIfDeviceOSVersionStillSupported(for: appStoreAppInfo.minimumOSVersion) else {
-            completion(.failure(.osIsNoLongerSupported))
+        guard let appStoreVersion = try? Version(appStoreAppInfo.minimumOSVersion) else {
+            completion(.failure(.failedToParseAppStoreVersion))
             return
         }
         
-        let updateType = DataParser.determineUpdateType(with: currentAppVersion, and: appStoreAppInfo.version)
-        completion(.success(updateType))
+        if currentAppVersion.major > appStoreVersion.major {
+            completion(.success(.hardUpdate))
+        }
+        else if let minor = currentAppVersion.minor, let storeMinor = appStoreVersion.minor, minor > storeMinor {
+            completion(.success(.softUpdate))
+        }
+        else {
+            completion(.success(.notNeeded))
+        }
     }
     
     public func verifyAppVersion(completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {

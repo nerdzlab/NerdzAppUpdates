@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import NerdzUtils
 
 public enum AppUpdateType {
     case softUpdate
@@ -13,7 +14,7 @@ public enum AppUpdateType {
     case notNeeded
     
     init(recommendedVersion: String?, requiredVersion: String?) {
-        if let currentVersion = Bundle.main.currentAppVersion {
+        if let currentVersion = Bundle.main.appVersion {
             if requiredVersion?.isVersion(greaterThan: currentVersion) == true {
                 self = .hardUpdate
             }

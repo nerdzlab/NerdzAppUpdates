@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/nerdzlab/NerdzUtils.git",
         "state": {
           "branch": null,
-          "revision": "0f25f452a2fe890888c7e01d350ac68747377582",
-          "version": "1.0.66"
+          "revision": "5462f517649feada1c1ad6a50feff92c9ffca2fd",
+          "version": "1.0.68"
         }
       },
       {
@@ -134,6 +134,15 @@
           "branch": null,
           "revision": "1f62db409f2c9b0223a3f68567b4a01333aae778",
           "version": "1.17.0"
+        }
+      },
+      {
+        "package": "Version",
+        "repositoryURL": "https://github.com/mrackwitz/Version.git",
+        "state": {
+          "branch": null,
+          "revision": "fd4b0eb5756aa7f1c33977fb626cf37d2140a3a0",
+          "version": "0.8.0"
         }
       }
     ]

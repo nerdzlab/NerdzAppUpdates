@@ -10,7 +10,13 @@ import Foundation
 public enum VersionVerifierError: Error {
     case unknownError
     case failedToRetreiveCurrentVersion
+    case apiError(String)
+    
+    /// AppStore
     case theAppWasNotFoundOnAppStore
     case osIsNoLongerSupported
-    case apiError(String)
+    case failedToParseAppStoreVersion
+    
+    // Backend
+    case noEndpointToExecuteOn
 }
