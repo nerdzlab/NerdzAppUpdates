@@ -20,6 +20,7 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     
     private let config = RemoteConfig.remoteConfig()
     
+    /// Function to verify version of the app from firebase
     public func verifyAppVersion(completion: @escaping AppUpdateAction) {
         config.fetchAndActivate { status, error in
             if status == .error {
