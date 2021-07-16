@@ -12,11 +12,6 @@ public enum VersionVerifierError: Error {
     case failedToRetreiveCurrentVersion
     case apiError(String)
     
-    /// AppStore
-    case theAppWasNotFoundOnAppStore
-    case osIsNoLongerSupported
-    case failedToParseAppStoreVersion
-    
     // Backend
     case noEndpointToExecuteOn
 }
