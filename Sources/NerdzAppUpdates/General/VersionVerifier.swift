@@ -12,11 +12,19 @@ public class VersionVerifier {
     private let softUpdateMode: SoftUpdateMode
     private let hardUpdateMode: HardUpdateMode
     private let versionDataProvider: VersionProviderType
+    private let loadingIndicationMode: LoadingIndicationMode
     
-    public init(versionDataProvider: VersionProviderType, softUpdateMode: SoftUpdateMode, hardUpdateMode: HardUpdateMode) {
+    /// To initialize version verifier you should pass
+    public init(
+        versionDataProvider: VersionProviderType,
+        loadingIndicationMode: LoadingIndicationMode,
+        softUpdateMode: SoftUpdateMode,
+        hardUpdateMode: HardUpdateMode
+    ) {
         self.softUpdateMode = softUpdateMode
         self.hardUpdateMode = hardUpdateMode
         self.versionDataProvider = versionDataProvider
+        self.loadingIndicationMode = loadingIndicationMode
     }
     
     private func handleDataProviderVersionVerification(
@@ -83,8 +91,30 @@ public class VersionVerifier {
         topViewController.present(alert, animated: true)
     }
     
+    private func startLoading() {
+        switch loadingIndicationMode {
+        case .screen(let screen):
+            screen.onStartLoading?()
+        case .custom(let onStartLoading, _):
+            onStartLoading?()
+        case .none: break
+        }
+    }
+    
+    private func stopLoading() {
+        switch loadingIndicationMode {
+        case .screen(let screen):
+            screen.onStopLoading?()
+        case .custom(_, let onStopLoading):
+            onStopLoading?()
+        case .none: break
+        }
+    }
+    
     public func verifyVersion(completion: @escaping VersionVerifierCompletionAction) {
+        startLoading()
         versionDataProvider.verifyAppVersion { [weak self] result in
+            self?.stopLoading()
             self?.handleDataProviderVersionVerification(with: result, completion: completion)
         }
     }
