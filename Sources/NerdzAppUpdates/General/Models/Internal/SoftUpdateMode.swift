@@ -8,7 +8,7 @@
 import UIKit
 
 public enum SoftUpdateMode {
-    case screen(SoftUpdateScreenType)
+    case screen(SoftUpdateScreenType, Bool)
     case alert(UIAlertController)
     case custom(VersionVerifierEmptyAction)
 }

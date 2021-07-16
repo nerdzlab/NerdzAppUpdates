@@ -9,4 +9,6 @@ import UIKit
 
 public protocol SoftUpdateScreenType: UIViewController {
     var onDissmiss: VersionVerifierEmptyAction? { get set }
+    
+    func animateDissapear(completion: VersionVerifierEmptyAction?)
 }

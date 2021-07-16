@@ -11,12 +11,19 @@ public class VersionVerifier {
 
     private let softUpdateMode: SoftUpdateMode
     private let hardUpdateMode: HardUpdateMode
+    private let loadingIndicationMode: LoadingIndicationMode
     private let versionDataProvider: VersionProviderType
     
-    public init(versionDataProvider: VersionProviderType, softUpdateMode: SoftUpdateMode, hardUpdateMode: HardUpdateMode) {
+    public init(
+        versionDataProvider: VersionProviderType,
+        loadingIndicationMode: LoadingIndicationMode,
+        softUpdateMode: SoftUpdateMode,
+        hardUpdateMode: HardUpdateMode
+    ) {
         self.softUpdateMode = softUpdateMode
         self.hardUpdateMode = hardUpdateMode
         self.versionDataProvider = versionDataProvider
+        self.loadingIndicationMode = loadingIndicationMode
     }
     
     private func handleDataProviderVersionVerification(
@@ -38,8 +45,8 @@ public class VersionVerifier {
             case .softUpdate:
                 
                 switch softUpdateMode {
-                case .screen(let screen):
-                    showScreenForSoftUpdate(screen)
+                case .screen(let screen, let animated):
+                    showScreenForSoftUpdate(screen, animated: animated)
                 case .alert(let alert):
                     show(alert)
                 case .custom(let action):
@@ -63,15 +70,26 @@ public class VersionVerifier {
         currentWindow.rootViewController = screen
     }
     
-    private func showScreenForSoftUpdate(_ screen: SoftUpdateScreenType) {
+    private func showScreenForSoftUpdate(_ screen: SoftUpdateScreenType, animated: Bool) {
         screen.presentAsOverlay()
-        screen.onDissmiss = { [weak screen] in
-            do {
-                try screen?.dismissOverlay()
+        screen.onDissmiss = { [weak screen, weak self] in
+            if animated {
+                screen?.animateDissapear { [weak screen, weak self] in
+                    self?.dissmissScreen(screen)
+                }
             }
-            catch {
-                print("Version check error, overlay dissmiss")
+            else {
+                self?.dissmissScreen(screen)
             }
+        }
+    }
+    
+    private func dissmissScreen(_ screen: SoftUpdateScreenType?) {
+        do {
+            try screen?.dismissOverlay()
+        }
+        catch {
+            print("Version check error, overlay dissmiss")
         }
     }
     
@@ -83,8 +101,30 @@ public class VersionVerifier {
         topViewController.present(alert, animated: true)
     }
     
+    private func startLoading() {
+        switch loadingIndicationMode {
+        case .screen(let screen):
+            screen.onStartLoading?()
+        case .custom(let onStartLoading, _):
+            onStartLoading?()
+        case .none: break
+        }
+    }
+    
+    private func finishLoading() {
+        switch loadingIndicationMode {
+        case .screen(let screen):
+            screen.onFinishLoading?()
+        case .custom(_, let onFinishLoading):
+            onFinishLoading?()
+        case .none: break
+        }
+    }
+    
     public func verifyVersion(completion: @escaping VersionVerifierCompletionAction) {
+        startLoading()
         versionDataProvider.verifyAppVersion { [weak self] result in
+            self?.finishLoading()
             self?.handleDataProviderVersionVerification(with: result, completion: completion)
         }
     }
