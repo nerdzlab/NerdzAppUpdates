@@ -18,6 +18,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
     private let appStoreEndpoint: Endpoint
     public var country: AppStoreCountry
     
+    /// Init object with country, if your app is not present in usa AppStore
     public init(country: AppStoreCountry) {
         self.country = country
         self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
@@ -26,7 +27,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         super.init()
     }
     
-    
+    /// Function that handle success response from itunes api, and verify app version
     private func handleGetAppInfoRequestSuccess(with data: AppStoreResponseApiModel, completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
         
         guard let currentAppVersionString = Bundle.main.appVersion else {
@@ -60,6 +61,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         }
     }
     
+    /// Function to verify app using Itunes api
     public func verifyAppVersion(completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
         guard let bundleId = Bundle.main.bundleIdentifier else {
             completion(.failure(.unknownError))

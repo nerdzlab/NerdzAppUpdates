@@ -8,6 +8,7 @@
 import Foundation
 import NerdzNetworking
 
+/// Request to retreive version from itunes
 struct GetLatestAppStoreVersionRequest: Request {
     
     typealias ResponseObjectType = AppStoreResponseApiModel

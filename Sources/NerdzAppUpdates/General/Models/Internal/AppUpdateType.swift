@@ -8,9 +8,15 @@
 import Foundation
 import NerdzUtils
 
+/// Enum with types of updates
 public enum AppUpdateType {
+    /// optional update, could be sciped
     case softUpdate
+    
+    /// required update, user can't skip this update
     case hardUpdate
+    
+    /// update is not needed
     case notNeeded
     
     init(recommendedVersion: String?, requiredVersion: String?) {
