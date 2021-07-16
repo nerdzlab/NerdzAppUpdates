@@ -101,15 +101,6 @@
         }
       },
       {
-        "package": "NerdzNetworking",
-        "repositoryURL": "https://github.com/nerdzlab/NerdzNetworking.git",
-        "state": {
-          "branch": null,
-          "revision": "090344230b894704da2d31c254b9c6f5898a22fa",
-          "version": "1.1.2"
-        }
-      },
-      {
         "package": "NerdzUtils",
         "repositoryURL": "https://github.com/nerdzlab/NerdzUtils.git",
         "state": {
@@ -134,15 +125,6 @@
           "branch": null,
           "revision": "1f62db409f2c9b0223a3f68567b4a01333aae778",
           "version": "1.17.0"
-        }
-      },
-      {
-        "package": "Version",
-        "repositoryURL": "https://github.com/mrackwitz/Version.git",
-        "state": {
-          "branch": null,
-          "revision": "fd4b0eb5756aa7f1c33977fb626cf37d2140a3a0",
-          "version": "0.8.0"
         }
       }
     ]
