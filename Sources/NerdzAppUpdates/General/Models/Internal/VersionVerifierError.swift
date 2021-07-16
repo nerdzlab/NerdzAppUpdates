@@ -16,7 +16,4 @@ public enum VersionVerifierError: Error {
     case theAppWasNotFoundOnAppStore
     case osIsNoLongerSupported
     case failedToParseAppStoreVersion
-    
-    // Backend
-    case noEndpointToExecuteOn
 }
