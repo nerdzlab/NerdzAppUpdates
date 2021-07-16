@@ -7,6 +7,15 @@
 
 import UIKit
 
+/// Protocol  that should be implemented by every screen that should be presented if soft update needed
+/// `onDissmiss` - closur that should be called when user want to skip the update
+/// `animateDissapear` - function that responsible for animatig screen dissapearing
 public protocol SoftUpdateScreenType: UIViewController {
     var onDissmiss: VersionVerifierEmptyAction? { get set }
+    
+    func animateDissapear(completion: VersionVerifierEmptyAction?)
+}
+
+public extension SoftUpdateScreenType {
+    func animateDissapear(completion: VersionVerifierEmptyAction?) { }
 }

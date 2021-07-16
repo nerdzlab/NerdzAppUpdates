@@ -9,11 +9,14 @@ import Foundation
 import NerdzNetworking
 import NerdzUtils
 
+/// Version provider for your backend server
 public class BackendVersionProvider<BackendRequest: Request>: NSObject, VersionProviderType where BackendRequest.ResponseObjectType: BackendVersionResponseType {
 
     private let request: BackendRequest
     private let endpoint: Endpoint?
 
+    /// Init version provider with request, that provides version info from your backend
+    /// and endpoint on which provider should execute your request
     public init(_ request: BackendRequest, endpoint: Endpoint? = .default) {
         self.request = request
         self.endpoint = endpoint
@@ -21,6 +24,7 @@ public class BackendVersionProvider<BackendRequest: Request>: NSObject, VersionP
         super.init()
     }
     
+    /// Function that perform request to your backend server for retreiving update info
     public func verifyAppVersion(completion: @escaping AppUpdateAction) {
         guard let endpoint = endpoint else {
             completion(.failure(.noEndpointToExecuteOn))
