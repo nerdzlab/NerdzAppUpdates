@@ -23,10 +23,8 @@ let package = Package(
         .target(
             name: "NerdzAppUpdates",
             dependencies: [
-                .product(name: "FirebaseRemoteConfig", package: "Firebase"),
                 .product(name: "NerdzUtils", package: "NerdzUtils"),
-                .product(name: "NerdzNetworking", package: "NerdzNetworking"),
-                .product(name: "Version", package: "Version")
+                .product(name: "NerdzNetworking", package: "NerdzNetworking")
             ]
         )
     ]
