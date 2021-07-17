@@ -18,7 +18,7 @@ When using `BackendVersionProvider` and `FirebaseVersionProvider` you can set re
 ## Instalation
 You can install this library using Swift Package Manager.
 To install `AppStoreVersionProvider` use `provider/appstore` branch.
-To install `BackendVersionProvider` use `provider/backend` or `master` branch.
+To install `BackendVersionProvider` use `provider/backend` branch.
 To install `FirebaseVersionProvider` use `provider/firebase` branch.
 
 ## Use examples
@@ -32,10 +32,12 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
-    private lazy var appStoreVersionProvider = AppStoreVersionProvider(country: .germany) // Line 2
-    private lazy var versionVerifyer: VersionVerifier =  { // Line 3
+    private lazy var versionVerifyer: VersionVerifier =  { // Line 2
+    
+        let provider = AppStoreVersionProvider(country: .germany) // Line 3
+    
         let verifier = VersionVerifier(
-            versionDataProvider: appStoreVersionProvider,
+            versionDataProvider: provider,
             loadingIndicationMode: .screen(LoaderScreen()), // Line 4
             softUpdateMode: .screen(SoftUpdateScreen(), true), // Line 5
             hardUpdateMode: .screen(HardUpdateScreen()) // Line 6
@@ -45,27 +47,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-        window?.makeKeyAndVisible()
-        verifyVersions() // Line 7
+    
+        verifyVersion() // Line 7
         
         return true
     }
     
-    private func verifyVersions() {
-        versionVerifyer.verifyVersion(completion: { [weak self] result in // Line 8
-            switch result {
-            case .success(): break
-            case .failure(let error):
-                self?.showError(error.localizedDescription) // Line 9
+    private func verifyVersion() {
+        versionVerifyer.verifyVersion { [weak self] result in // Line 8
+            guard case .failure(let error) = result else {
+                return
             }
-        })
+            
+            self?.showError(error.localizedDescription) // Line 9
+        }
     }
 }
 ```
 Let's go through some important lines of code of above mentioned snippet.
   - Line 1 - import library
-  - Line 2 - initializition of version provider
-  - Line 3 - version verifier object initialization
+  - Line 2 - version verifier object initialization
+  - Line 3 - initializition of version provider
   - Line 4 - passing custom screen for loading indication, typicaly is copy of app launch storyboard with loading indicator
   - Line 5 - passing soft update configuration, where `SoftUpdateScreen()` is screen that provides user posibility to open app distribution service,
 or skip an update, and `animated` - is boolean option to animate dissapearing of screen mentioned above or not
@@ -74,6 +76,6 @@ or skip an update, and `animated` - is boolean option to animate dissapearing of
   - Line 8 - calling library function 
   - Line 9 - displaying error in case of verification check
 
-## Warning, posible errors. 
+## PAY ATTENTION. 
   1. Make sure to store reference to versionVerifier object, so this object won't be deinited before the version check is completed.
-  2. In case you'r using `AppStoreVersionProvider` and your app is not included in USA app store, please specifie country in version provider initializer. You can see list of available countries in [AppStoreCountry file](https://github.com/nerdzlab/NerdzAppUpdates/blob/provider/appstore/Sources/NerdzAppUpdates/VersionProviders/AppStore/AppStoreCountry.swift).
+  2. In case you're using `AppStoreVersionProvider`, please specify country in version provider initializer. You can see list of available countries in [AppStoreCountry file](https://github.com/nerdzlab/NerdzAppUpdates/blob/provider/appstore/Sources/NerdzAppUpdates/VersionProviders/AppStore/AppStoreCountry.swift).
