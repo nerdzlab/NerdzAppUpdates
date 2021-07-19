@@ -11,8 +11,8 @@ import UIKit
 /// Warning - you should store reference to this object in some class, to make sure, object not deinited before version check completed
 public class VersionVerifier {
 
-    private let softUpdateMode: SoftUpdateMode
-    private let hardUpdateMode: HardUpdateMode
+    private let softUpdateMode: SoftUpdateMode?
+    private let hardUpdateMode: HardUpdateMode?
     private let versionDataProvider: VersionProviderType
     private let loadingIndicationMode: LoadingIndicationMode
     
@@ -23,9 +23,9 @@ public class VersionVerifier {
     /// `hardUpdateMode` - configuration of displaying hard update warning
     public init(
         versionDataProvider: VersionProviderType,
-        loadingIndicationMode: LoadingIndicationMode,
-        softUpdateMode: SoftUpdateMode,
-        hardUpdateMode: HardUpdateMode
+        loadingIndicationMode: LoadingIndicationMode = .none,
+        softUpdateMode: SoftUpdateMode? = nil,
+        hardUpdateMode: HardUpdateMode? = nil
     ) {
         self.softUpdateMode = softUpdateMode
         self.hardUpdateMode = hardUpdateMode
@@ -43,6 +43,9 @@ public class VersionVerifier {
         case .success(let updateType):
             switch updateType {
             case .hardUpdate:
+                guard let hardUpdateMode = hardUpdateMode else {
+                    break
+                }
                 
                 switch hardUpdateMode {
                 case .screen(let screen):
@@ -52,6 +55,9 @@ public class VersionVerifier {
                 }
                 
             case .softUpdate:
+                guard let softUpdateMode = softUpdateMode else {
+                    break
+                }
                 
                 switch softUpdateMode {
                 case .screen(let screen, let animated):
