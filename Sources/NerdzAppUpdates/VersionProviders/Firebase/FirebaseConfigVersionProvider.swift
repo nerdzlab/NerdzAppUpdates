@@ -19,6 +19,13 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     }
     
     private let config = RemoteConfig.remoteConfig()
+    private let recommendedKey: String
+    private let requiredKey: String
+    
+    public init(recommendedKey: String = Constants.Keys.requiredVersion, requiredKey: String = Constants.Keys.requiredVersion) {
+        self.recommendedKey = recommendedKey
+        self.requiredKey = requiredKey
+    }
     
     /// Function to verify version of the app from firebase
     public func verifyAppVersion(completion: @escaping AppUpdateAction) {
@@ -29,12 +36,12 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
             
             let recommendedVersion = self
                 .config
-                .configValue(forKey: Constants.Keys.recommendedVersion)
+                .configValue(forKey: recommendedKey)
                 .stringValue
             
             let requiredVersion = self
                 .config
-                .configValue(forKey: Constants.Keys.requiredVersion)
+                .configValue(forKey: requiredKey)
                 .stringValue
             
             let updateType = AppUpdateType(
