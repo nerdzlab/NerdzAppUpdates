@@ -79,3 +79,7 @@ or skip an update, and `animated` - is boolean option to animate dissapearing of
 ## PAY ATTENTION. 
   1. Make sure to store reference to versionVerifier object, so this object won't be deinited before the version check is completed.
   2. In case you're using `AppStoreVersionProvider`, please specify country in version provider initializer. You can see list of available countries in [AppStoreCountry file](https://github.com/nerdzlab/NerdzAppUpdates/blob/provider/appstore/Sources/NerdzAppUpdates/VersionProviders/AppStore/AppStoreCountry.swift).
+  
+  # License
+
+  This code is distributed under the MIT license. See the `LICENSE` file for more info.
