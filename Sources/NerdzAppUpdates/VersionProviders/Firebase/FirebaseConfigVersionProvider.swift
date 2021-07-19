@@ -11,10 +11,10 @@ import NerdzUtils
 
 public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     
-    private enum Constants {
-        enum Keys {
-            static let recommendedVersion = "recommended-version"
-            static let requiredVersion = "required-version"
+    public enum Constants {
+        public enum Keys {
+            public static let recommendedVersion = "recommended-version"
+            public static let requiredVersion = "required-version"
         }
     }
     
@@ -29,19 +29,23 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     
     /// Function to verify version of the app from firebase
     public func verifyAppVersion(completion: @escaping AppUpdateAction) {
-        config.fetchAndActivate { status, error in
+        config.fetchAndActivate { [weak self] status, error in
+            guard let self = self else {
+                return
+            }
+            
             if status == .error {
                 completion(.failure(.apiError(error?.localizedDescription ?? "Unknown error")))
             }
             
             let recommendedVersion = self
                 .config
-                .configValue(forKey: recommendedKey)
+                .configValue(forKey: self.recommendedKey)
                 .stringValue
             
             let requiredVersion = self
                 .config
-                .configValue(forKey: requiredKey)
+                .configValue(forKey: self.requiredKey)
                 .stringValue
             
             let updateType = AppUpdateType(
