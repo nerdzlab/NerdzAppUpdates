@@ -27,6 +27,15 @@
           "revision": "aae27466101e54ce2829f2ccdc418c0826e57cfb",
           "version": "1.0.78"
         }
+      },
+      {
+        "package": "Version",
+        "repositoryURL": "https://github.com/mrackwitz/Version.git",
+        "state": {
+          "branch": null,
+          "revision": "fd4b0eb5756aa7f1c33977fb626cf37d2140a3a0",
+          "version": "0.8.0"
+        }
       }
     ]
   },

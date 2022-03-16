@@ -15,6 +15,7 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(name: "NerdzNetworking", url: "https://github.com/nerdzlab/NerdzNetworking.git", from: "1.1.2"),
+        .package(name: "Version", url: "https://github.com/mrackwitz/Version.git", from: "0.8.0"),
         .package(name: "NerdzUtils", url: "https://github.com/nerdzlab/NerdzUtils.git", from: "1.0.78")
     ],
     targets: [
@@ -24,6 +25,8 @@ let package = Package(
             name: "NerdzAppUpdates",
             dependencies: [
                 .product(name: "NerdzUtils", package: "NerdzUtils"),
+                .product(name: "NerdzNetworking", package: "NerdzNetworking"),
+                .product(name: "Version", package: "Version"),
                 .product(name: "NerdzNetworking", package: "NerdzNetworking")
             ]
         )
