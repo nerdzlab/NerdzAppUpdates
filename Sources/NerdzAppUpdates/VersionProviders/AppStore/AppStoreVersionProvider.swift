@@ -30,7 +30,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
     /// Function that handle success response from itunes api, and verify app version
     private func handleGetAppInfoRequestSuccess(with data: AppStoreResponseApiModel, completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
         
-        guard let currentAppVersionString = Bundle.main.appVersion else {
+        guard let currentAppVersionString = Bundle.main.nz.appVersion else {
             completion(.failure(.failedToRetreiveCurrentVersion))
             return
         }
@@ -53,7 +53,9 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         if currentAppVersion.major > appStoreVersion.major {
             completion(.success(.hardUpdate))
         }
-        else if let minor = currentAppVersion.minor, let storeMinor = appStoreVersion.minor, minor > storeMinor {
+        else if let minor = currentAppVersion.minor,
+                let storeMinor = appStoreVersion.minor,
+                minor > storeMinor {
             completion(.success(.softUpdate))
         }
         else {

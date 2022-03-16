@@ -11,4 +11,21 @@ import UIKit
 public protocol LoadingIndicationScreenType: UIViewController {
     func startLoading()
     func stopLoading()
+    func presentAsOverlay()
+    func dismissOverlay()
+}
+
+public extension LoadingIndicationScreenType {
+    func presentAsOverlay() {
+        nz.presentAsOverlay()
+    }
+    
+    func dismissOverlay() {
+        do {
+            try nz.dismissOverlay()
+        }
+        catch {
+            debugPrint("Version check error, overlay dissmiss")
+        }
+    }
 }
