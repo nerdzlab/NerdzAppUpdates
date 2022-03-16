@@ -14,8 +14,23 @@ public protocol SoftUpdateScreenType: UIViewController {
     var onDissmiss: VersionVerifierEmptyAction? { get set }
     
     func animateDissapear(completion: VersionVerifierEmptyAction?)
+    func presentAsOverlay()
+    func dismissOverlay()
 }
 
 public extension SoftUpdateScreenType {
     func animateDissapear(completion: VersionVerifierEmptyAction?) { }
+    
+    func presentAsOverlay() {
+        nz.presentAsOverlay()
+    }
+    
+    func dismissOverlay() {
+        do {
+            try nz.dismissOverlay()
+        }
+        catch {
+            debugPrint("Version check error, overlay dissmiss")
+        }
+    }
 }

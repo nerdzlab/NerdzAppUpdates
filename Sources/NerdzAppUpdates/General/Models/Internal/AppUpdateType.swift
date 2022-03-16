@@ -20,11 +20,11 @@ public enum AppUpdateType {
     case notNeeded
     
     init(recommendedVersion: String?, requiredVersion: String?) {
-        if let currentVersion = Bundle.main.appVersion {
-            if requiredVersion?.isVersion(greaterThan: currentVersion) == true {
+        if let currentVersion = Bundle.main.nz.appVersion {
+            if requiredVersion?.nz.isVersion(greaterThan: currentVersion) == true {
                 self = .hardUpdate
             }
-            else if recommendedVersion?.isVersion(greaterThan: currentVersion) == true {
+            else if recommendedVersion?.nz.isVersion(greaterThan: currentVersion) == true {
                 self = .softUpdate
             }
             else {

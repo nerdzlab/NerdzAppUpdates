@@ -107,17 +107,13 @@ public class VersionVerifier {
     
     /// Function that dismiss soft update screen, by removing screen's window
     private func dismissScreen(_ screen: SoftUpdateScreenType?) {
-        do {
-            try screen?.dismissOverlay()
-        }
-        catch {
-            print("Version check error, overlay dissmiss")
-        }
+        screen?.dismissOverlay()
     }
     
     /// Showing alert for soft update on top view controller
     private func show(_ alert: UIAlertController) {
-        guard let topViewController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController?.topController else {
+        guard let topViewController = UIApplication.shared.windows
+                .filter({ $0.isKeyWindow }).first?.rootViewController?.nz.topController else {
             return
         }
         
@@ -140,7 +136,7 @@ public class VersionVerifier {
     private func stopLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            try? screen.dismissOverlay()
+            screen.dismissOverlay()
             screen.stopLoading()
         case .custom(_, let onStopLoading):
             onStopLoading?()
