@@ -22,7 +22,6 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
     public init(country: AppStoreCountry) {
         self.country = country
         self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
-        Endpoint.default = appStoreEndpoint
         
         super.init()
     }
