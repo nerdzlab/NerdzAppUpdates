@@ -12,6 +12,7 @@ import UIKit
 /// `animateDissapear` - function that responsible for animatig screen dissapearing
 public protocol SoftUpdateScreenType: UIViewController {
     var onDissmiss: VersionVerifierEmptyAction? { get set }
+    var storeAppVersion: String? { get set }
     
     func animateDissapear(completion: VersionVerifierEmptyAction?)
     func presentAsOverlay()

@@ -16,5 +16,5 @@ public enum SoftUpdateMode {
     case alert(UIAlertController)
     
     /// option that call closure when soft update is needed 
-    case custom(VersionVerifierEmptyAction)
+    case custom(VersionVerifierStringAction)
 }

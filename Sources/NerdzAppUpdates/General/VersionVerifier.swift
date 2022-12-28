@@ -36,12 +36,12 @@ public class VersionVerifier {
     /// Function that handle version provider completion
     /// and triggers showing of hard update and soft update, or skiping app update
     private func handleDataProviderVersionVerification(
-        with result: Result<AppUpdateType, VersionVerifierError>,
+        with result: Result<(AppUpdateType, String), VersionVerifierError>,
         completion: VersionVerifierCompletionAction?
     ) {
         switch result {
-        case .success(let updateType):
-            switch updateType {
+        case .success(let successTuple):
+            switch successTuple.0 {
             case .hardUpdate:
                 guard let hardUpdateMode = hardUpdateMode else {
                     break
@@ -49,9 +49,11 @@ public class VersionVerifier {
                 
                 switch hardUpdateMode {
                 case .screen(let screen):
+                    screen.storeAppVersion = successTuple.1
                     showScreenForHardUpdate(screen)
+                    
                 case .custom(let action):
-                    action()
+                    action(successTuple.1)
                 }
                 
             case .softUpdate:
@@ -61,11 +63,14 @@ public class VersionVerifier {
                 
                 switch softUpdateMode {
                 case .screen(let screen, let animated):
+                    screen.storeAppVersion = successTuple.1
                     showScreenForSoftUpdate(screen, animated: animated)
+                    
                 case .alert(let alert):
                     show(alert)
+                    
                 case .custom(let action):
-                    action()
+                    action(successTuple.1)
                 }
                 
             case .notNeeded:
@@ -126,9 +131,12 @@ public class VersionVerifier {
         case .screen(let screen):
             screen.presentAsOverlay()
             screen.startLoading()
+            
         case .custom(let onStartLoading, _):
             onStartLoading?()
-        case .none: break
+            
+        case .none:
+            break
         }
     }
     
@@ -138,9 +146,12 @@ public class VersionVerifier {
         case .screen(let screen):
             screen.dismissOverlay()
             screen.stopLoading()
+            
         case .custom(_, let onStopLoading):
             onStopLoading?()
-        case .none: break
+            
+        case .none:
+            break
         }
     }
     

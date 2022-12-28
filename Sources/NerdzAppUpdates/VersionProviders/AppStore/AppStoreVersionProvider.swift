@@ -28,8 +28,10 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
     }
     
     /// Function that handle success response from itunes api, and verify app version
-    private func handleGetAppInfoRequestSuccess(with data: AppStoreResponseApiModel, completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
-        
+    private func handleGetAppInfoRequestSuccess(
+        with data: AppStoreResponseApiModel,
+        completion: @escaping AppUpdateAction
+    ) {
         guard let currentAppVersionString = Bundle.main.nz.appVersion else {
             completion(.failure(.failedToRetreiveCurrentVersion))
             return
@@ -51,20 +53,20 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         }
         
         if currentAppVersion.major > appStoreVersion.major {
-            completion(.success(.hardUpdate))
+            completion(.success((.hardUpdate, currentAppVersionString)))
         }
         else if let minor = currentAppVersion.minor,
                 let storeMinor = appStoreVersion.minor,
                 minor > storeMinor {
-            completion(.success(.softUpdate))
+            completion(.success((.softUpdate, currentAppVersionString)))
         }
         else {
-            completion(.success(.notNeeded))
+            completion(.success((.notNeeded, currentAppVersionString)))
         }
     }
     
     /// Function to verify app using Itunes api
-    public func verifyAppVersion(completion: @escaping (Result<AppUpdateType, VersionVerifierError>) -> Void) {
+    public func verifyAppVersion(completion: @escaping AppUpdateAction) {
         guard let bundleId = Bundle.main.bundleIdentifier else {
             completion(.failure(.unknownError))
             return
@@ -73,11 +75,9 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         GetLatestAppStoreVersionRequest(bundleId: bundleId, countryCode: country.code)
             .execute(on: appStoreEndpoint)
             .onSuccess { [weak self] response in
-                print(response)
                 self?.handleGetAppInfoRequestSuccess(with: response, completion: completion)
             }
             .onFail { error in
-                print(error)
                 completion(.failure(.apiError(error.message)))
             }
     }
