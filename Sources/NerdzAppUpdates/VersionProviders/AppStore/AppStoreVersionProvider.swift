@@ -46,17 +46,17 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
             return
         }
         
-        guard let appStoreVersion = try? Version(appStoreAppInfo.minimumOSVersion) else {
+        guard let appStoreVersion = try? Version(appStoreAppInfo.currentVersionReleaseDate) else {
             completion(.failure(.failedToParseAppStoreVersion))
             return
         }
         
-        if currentAppVersion.major > appStoreVersion.major {
+        if currentAppVersion.major < appStoreVersion.major {
             completion(.success((.hardUpdate, currentAppVersionString)))
         }
         else if let minor = currentAppVersion.minor,
                 let storeMinor = appStoreVersion.minor,
-                minor > storeMinor {
+                minor < storeMinor {
             completion(.success((.softUpdate, currentAppVersionString)))
         }
         else {
