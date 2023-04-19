@@ -46,7 +46,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
             return
         }
         
-        guard let appStoreVersion = try? Version(appStoreAppInfo.currentVersionReleaseDate) else {
+        guard let appStoreVersion = try? Version(appStoreAppInfo.version) else {
             completion(.failure(.failedToParseAppStoreVersion))
             return
         }
