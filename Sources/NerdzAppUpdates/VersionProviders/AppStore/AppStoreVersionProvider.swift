@@ -52,15 +52,15 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         }
         
         if currentAppVersion.major < appStoreVersion.major {
-            completion(.success((.hardUpdate, appStoreVersion)))
+            completion(.success((.hardUpdate, appStoreAppInfo.version)))
         }
         else if let minor = currentAppVersion.minor,
                 let storeMinor = appStoreVersion.minor,
                 minor < storeMinor {
-            completion(.success((.softUpdate, appStoreVersion)))
+            completion(.success((.softUpdate, appStoreAppInfo.version)))
         }
         else {
-            completion(.success((.notNeeded, appStoreVersion)))
+            completion(.success((.notNeeded, appStoreAppInfo.version)))
         }
     }
     
