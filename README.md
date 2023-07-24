@@ -24,7 +24,7 @@ To install `FirebaseVersionProvider` use `provider/firebase` branch.
 ## Use examples
 Example of use `AppStoreVersionProvider` with custom loading indication.
 
-```
+```swift
 import NerdzAppUpdates // Line 1
 import UIKit
 
