@@ -44,6 +44,7 @@ public class VersionVerifier {
             switch successTuple.0 {
             case .hardUpdate:
                 guard let hardUpdateMode = hardUpdateMode else {
+                    completion?(.success(()))
                     break
                 }
                 
@@ -58,6 +59,7 @@ public class VersionVerifier {
                 
             case .softUpdate:
                 guard let softUpdateMode = softUpdateMode else {
+                    completion?(.success(()))
                     break
                 }
                 
