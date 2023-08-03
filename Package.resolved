@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/nerdzlab/NerdzNetworking.git",
         "state": {
           "branch": null,
-          "revision": "090344230b894704da2d31c254b9c6f5898a22fa",
-          "version": "1.1.2"
+          "revision": "8e31c804f8f9fb17fef8bb3e2d76a9b54baebecf",
+          "version": "2.0.0"
         }
       },
       {
@@ -24,8 +24,17 @@
         "repositoryURL": "https://github.com/nerdzlab/NerdzUtils.git",
         "state": {
           "branch": null,
-          "revision": "aae27466101e54ce2829f2ccdc418c0826e57cfb",
-          "version": "1.0.78"
+          "revision": "0db4ba8aab128c21f03bdc505d4b9e8ca25eb9c4",
+          "version": "1.0.86"
+        }
+      },
+      {
+        "package": "TrustKit",
+        "repositoryURL": "https://github.com/datatheorem/TrustKit.git",
+        "state": {
+          "branch": null,
+          "revision": "65d573e0e2687ea91ab0b1be377f9dd3eb1c2785",
+          "version": "2.0.1"
         }
       },
       {

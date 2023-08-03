@@ -77,7 +77,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
                 self?.handleGetAppInfoRequestSuccess(with: response, completion: completion)
             }
             .onFail { error in
-                completion(.failure(.apiError(error.message)))
+                completion(.failure(.apiError(error.localizedDescription)))
             }
     }
 }
