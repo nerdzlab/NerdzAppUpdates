@@ -54,7 +54,8 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         if currentAppVersion.major < appStoreVersion.major {
             completion(.success((.hardUpdate, currentAppVersionString)))
         }
-        else if let minor = currentAppVersion.minor,
+        else if currentAppVersion.major == appStoreVersion.major,
+                let minor = currentAppVersion.minor,
                 let storeMinor = appStoreVersion.minor,
                 minor < storeMinor {
             completion(.success((.softUpdate, currentAppVersionString)))
