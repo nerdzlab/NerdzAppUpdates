@@ -52,16 +52,16 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
         }
         
         if currentAppVersion.major < appStoreVersion.major {
-            completion(.success((.hardUpdate, currentAppVersionString)))
+            completion(.success((.hardUpdate, appStoreAppInfo.version)))
         }
         else if currentAppVersion.major == appStoreVersion.major,
                 let minor = currentAppVersion.minor,
                 let storeMinor = appStoreVersion.minor,
                 minor < storeMinor {
-            completion(.success((.softUpdate, currentAppVersionString)))
+            completion(.success((.softUpdate, appStoreAppInfo.version)))
         }
         else {
-            completion(.success((.notNeeded, currentAppVersionString)))
+            completion(.success((.notNeeded, appStoreAppInfo.version)))
         }
     }
     
@@ -78,7 +78,7 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
                 self?.handleGetAppInfoRequestSuccess(with: response, completion: completion)
             }
             .onFail { error in
-                completion(.failure(.apiError(error.message)))
+                completion(.failure(.apiError(error.localizedDescription)))
             }
     }
 }
