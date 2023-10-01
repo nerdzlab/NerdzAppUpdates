@@ -11,6 +11,7 @@ import UIKit
 /// `onDissmiss` - closur that should be called when user want to skip the update
 /// `animateDissapear` - function that responsible for animatig screen dissapearing
 public protocol SoftUpdateScreenType: UIViewController {
+    var latestVersion: String? { get set }
     var onDissmiss: VersionVerifierEmptyAction? { get set }
     var storeAppVersion: String? { get set }
     
