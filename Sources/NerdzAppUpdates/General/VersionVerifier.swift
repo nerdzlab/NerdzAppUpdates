@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import NerdzUtils
 
 /// Class that responsible for version verification
 /// Warning - you should store reference to this object in some class, to make sure, object not deinited before version check completed
@@ -96,7 +97,7 @@ public class VersionVerifier {
     /// You can dissmiss this window by calling `onDissmiss` in your screen
     /// You can add animations for dismissing screen implementing `animateDissapear` function
     private func showScreenForSoftUpdate(_ screen: SoftUpdateScreenType, animated: Bool) {
-        screen.presentAsOverlay()
+        (screen as? UIViewController)?.nz.presentAsOverlay()
         screen.onDissmiss = { [weak screen, weak self] in
             if animated {
                 screen?.animateDissapear { [weak screen, weak self] in
@@ -112,7 +113,7 @@ public class VersionVerifier {
     /// Function that dismiss soft update screen, by removing screen's window
     private func dismissScreen(_ screen: SoftUpdateScreenType?) {
         do {
-            try screen?.dismissOverlay()
+            try (screen as? UIViewController)?.nz.dismissOverlay()
         }
         catch {
             print("Version check error, overlay dissmiss")
@@ -121,7 +122,7 @@ public class VersionVerifier {
     
     /// Showing alert for soft update on top view controller
     private func show(_ alert: UIAlertController) {
-        guard let topViewController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController?.topController else {
+        guard let topViewController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController?.nz.topController else {
             return
         }
         
@@ -132,7 +133,7 @@ public class VersionVerifier {
     private func startLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            screen.presentAsOverlay()
+            (screen as? UIViewController)?.nz.presentAsOverlay()
             screen.startLoading()
         case .custom(let onStartLoading, _):
             onStartLoading?()
@@ -144,7 +145,7 @@ public class VersionVerifier {
     private func stopLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            try? screen.dismissOverlay()
+            try? (screen as? UIViewController)?.nz.dismissOverlay()
             screen.stopLoading()
         case .custom(_, let onStopLoading):
             onStopLoading?()
