@@ -36,11 +36,11 @@ public class VersionVerifier {
     /// Function that handle version provider completion
     /// and triggers showing of hard update and soft update, or skiping app update
     private func handleDataProviderVersionVerification(
-        with result: Result<AppUpdateType, VersionVerifierError>
+        with result: Result<VersionProviderResult, VersionVerifierError>
     ) {
         switch result {
-        case .success(let type):
-            switch successTuple.0 {
+        case .success(let checkResult):
+            switch checkResult.type {
             case .hardUpdate:
                 guard let hardUpdateMode = hardUpdateMode else {
                     break
@@ -48,11 +48,11 @@ public class VersionVerifier {
                 
                 switch hardUpdateMode {
                 case .screen(let screen):
-                    screen.storeAppVersion = successTuple.1
+                    screen.latestVersion = checkResult.latestVersion
                     showScreenForHardUpdate(screen)
                     
                 case .custom(let action):
-                    action(successTuple.1)
+                    action(checkResult.latestVersion)
                 }
                 
             case .softUpdate:
@@ -62,14 +62,14 @@ public class VersionVerifier {
                 
                 switch softUpdateMode {
                 case .screen(let screen, let animated):
-                    screen.storeAppVersion = successTuple.1
+                    screen.latestVersion = checkResult.latestVersion
                     showScreenForSoftUpdate(screen, animated: animated)
                     
                 case .alert(let alert):
                     show(alert)
                     
                 case .custom(let action):
-                    action(successTuple.1)
+                    action(checkResult.latestVersion)
                 }
                 
             case .notNeeded:
@@ -111,13 +111,17 @@ public class VersionVerifier {
     
     /// Function that dismiss soft update screen, by removing screen's window
     private func dismissScreen(_ screen: SoftUpdateScreenType?) {
-        screen?.dismissOverlay()
+        do {
+            try screen?.dismissOverlay()
+        }
+        catch {
+            print("Version check error, overlay dissmiss")
+        }
     }
     
     /// Showing alert for soft update on top view controller
     private func show(_ alert: UIAlertController) {
-        guard let topViewController = UIApplication.shared.windows
-                .filter({ $0.isKeyWindow }).first?.rootViewController?.nz.topController else {
+        guard let topViewController = UIApplication.shared.windows.filter({ $0.isKeyWindow }).first?.rootViewController?.nz.topController else {
             return
         }
         
@@ -130,12 +134,9 @@ public class VersionVerifier {
         case .screen(let screen):
             screen.presentAsOverlay()
             screen.startLoading()
-            
         case .custom(let onStartLoading, _):
             onStartLoading?()
-            
-        case .none:
-            break
+        case .none: break
         }
     }
     
@@ -143,14 +144,11 @@ public class VersionVerifier {
     private func stopLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            screen.dismissOverlay()
+            try? screen.dismissOverlay()
             screen.stopLoading()
-            
         case .custom(_, let onStopLoading):
             onStopLoading?()
-            
-        case .none:
-            break
+        case .none: break
         }
     }
     
