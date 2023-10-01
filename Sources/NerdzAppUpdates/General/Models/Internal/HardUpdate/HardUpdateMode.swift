@@ -10,8 +10,8 @@ import UIKit
 /// Enum with different types that can be used for hard update
 public enum HardUpdateMode {
     /// present screen
-    case screen(UIViewController)
+    case screen(HardUpdateScreenType)
     
     /// execute closure when update is required
-    case custom(VersionVerifierEmptyAction)
+    case custom(VersionVerifierStringAction)
 }

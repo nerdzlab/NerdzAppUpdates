@@ -36,11 +36,11 @@ public class VersionVerifier {
     /// Function that handle version provider completion
     /// and triggers showing of hard update and soft update, or skiping app update
     private func handleDataProviderVersionVerification(
-        with result: Result<AppUpdateType, VersionVerifierError>
+        with result: Result<VersionProviderResult, VersionVerifierError>
     ) {
         switch result {
-        case .success(let updateType):
-            switch updateType {
+        case .success(let checkResult):
+            switch checkResult.type {
             case .hardUpdate:
                 guard let hardUpdateMode = hardUpdateMode else {
                     break
@@ -48,9 +48,11 @@ public class VersionVerifier {
                 
                 switch hardUpdateMode {
                 case .screen(let screen):
+                    screen.latestVersion = checkResult.latestVersion
                     showScreenForHardUpdate(screen)
+                    
                 case .custom(let action):
-                    action()
+                    action(checkResult.latestVersion)
                 }
                 
             case .softUpdate:
@@ -60,11 +62,14 @@ public class VersionVerifier {
                 
                 switch softUpdateMode {
                 case .screen(let screen, let animated):
+                    screen.latestVersion = checkResult.latestVersion
                     showScreenForSoftUpdate(screen, animated: animated)
+                    
                 case .alert(let alert):
                     show(alert)
+                    
                 case .custom(let action):
-                    action()
+                    action(checkResult.latestVersion)
                 }
                 
             case .notNeeded:

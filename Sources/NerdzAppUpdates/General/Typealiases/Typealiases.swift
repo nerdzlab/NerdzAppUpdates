@@ -8,4 +8,6 @@
 import Foundation
 
 public typealias VersionVerifierEmptyAction = () -> Void
-public typealias AppUpdateAction = (Result<AppUpdateType, VersionVerifierError>) -> Void
+public typealias VersionProviderResult = (type: AppUpdateType, latestVersion: String?)
+public typealias AppUpdateAction = (Result<VersionProviderResult, VersionVerifierError>) -> Void
+public typealias VersionVerifierStringAction = (String?) -> Void
