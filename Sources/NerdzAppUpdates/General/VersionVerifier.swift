@@ -36,15 +36,13 @@ public class VersionVerifier {
     /// Function that handle version provider completion
     /// and triggers showing of hard update and soft update, or skiping app update
     private func handleDataProviderVersionVerification(
-        with result: Result<AppUpdateType, VersionVerifierError>,
-        completion: VersionVerifierCompletionAction?
+        with result: Result<AppUpdateType, VersionVerifierError>
     ) {
         switch result {
         case .success(let updateType):
             switch updateType {
             case .hardUpdate:
                 guard let hardUpdateMode = hardUpdateMode else {
-                    completion?(.success(()))
                     break
                 }
                 
@@ -57,7 +55,6 @@ public class VersionVerifier {
                 
             case .softUpdate:
                 guard let softUpdateMode = softUpdateMode else {
-                    completion?(.success(()))
                     break
                 }
                 
@@ -71,11 +68,11 @@ public class VersionVerifier {
                 }
                 
             case .notNeeded:
-                completion?(.success(()))
+                return
             }
             
-        case .failure(let error):
-            completion?(.failure(error))
+        case .failure:
+            return
         }
     }
     
@@ -153,11 +150,12 @@ public class VersionVerifier {
     /// Function wich responsible for version verification
     /// Parameter `completion` is responsible in notifiing api caller about if version check was completed
     /// with error or without and update is not needed
-    public func verifyVersion(completion: @escaping VersionVerifierCompletionAction) {
+    public func verifyVersion(completion: @escaping AppUpdateAction) {
         startLoading()
         versionDataProvider.verifyAppVersion { [weak self] result in
             self?.stopLoading()
-            self?.handleDataProviderVersionVerification(with: result, completion: completion)
+            self?.handleDataProviderVersionVerification(with: result)
+            completion(result)
         }
     }
 }
