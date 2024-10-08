@@ -17,7 +17,7 @@ let package = Package(
         .package(name: "NerdzNetworking", url: "https://github.com/nerdzlab/NerdzNetworking.git", from: "2.0.2"),
         .package(name: "Version", url: "https://github.com/mrackwitz/Version.git", from: "0.8.0"),
         .package(name: "NerdzUtils", url: "https://github.com/nerdzlab/NerdzUtils.git", from: "1.0.91"),
-        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "11.3.0"))
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk.git", .upToNextMajor(from: "11.0.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
