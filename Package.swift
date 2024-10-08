@@ -28,7 +28,6 @@ let package = Package(
                 .product(name: "NerdzUtils", package: "NerdzUtils"),
                 .product(name: "NerdzNetworking", package: "NerdzNetworking"),
                 .product(name: "Version", package: "Version"),
-                .product(name: "NerdzNetworking", package: "NerdzNetworking"),
                 .product(name: "FirebaseRemoteConfig", package: "Firebase")
             ]
         )
