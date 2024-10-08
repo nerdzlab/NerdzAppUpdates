@@ -14,9 +14,10 @@ let package = Package(
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
-        .package(name: "NerdzNetworking", url: "https://github.com/nerdzlab/NerdzNetworking.git", from: "2.0.0"),
+        .package(name: "NerdzNetworking", url: "https://github.com/nerdzlab/NerdzNetworking.git", from: "2.0.2"),
         .package(name: "Version", url: "https://github.com/mrackwitz/Version.git", from: "0.8.0"),
-        .package(name: "NerdzUtils", url: "https://github.com/nerdzlab/NerdzUtils.git", from: "1.0.78")
+        .package(name: "NerdzUtils", url: "https://github.com/nerdzlab/NerdzUtils.git", from: "1.0.91"),
+        .package(name: "Firebase", url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "11.3.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
@@ -27,7 +28,8 @@ let package = Package(
                 .product(name: "NerdzUtils", package: "NerdzUtils"),
                 .product(name: "NerdzNetworking", package: "NerdzNetworking"),
                 .product(name: "Version", package: "Version"),
-                .product(name: "NerdzNetworking", package: "NerdzNetworking")
+                .product(name: "NerdzNetworking", package: "NerdzNetworking"),
+                .product(name: "FirebaseRemoteConfig", package: "Firebase")
             ]
         )
     ]

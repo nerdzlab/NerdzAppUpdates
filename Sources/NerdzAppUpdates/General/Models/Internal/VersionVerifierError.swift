@@ -16,4 +16,5 @@ public enum VersionVerifierError: Error {
     case theAppWasNotFoundOnAppStore
     case osIsNoLongerSupported
     case failedToParseAppStoreVersion
+
 }

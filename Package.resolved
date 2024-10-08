@@ -2,6 +2,87 @@
   "object": {
     "pins": [
       {
+        "package": "abseil",
+        "repositoryURL": "https://github.com/google/abseil-cpp-binary.git",
+        "state": {
+          "branch": null,
+          "revision": "194a6706acbd25e4ef639bcaddea16e8758a3e27",
+          "version": "1.2024011602.0"
+        }
+      },
+      {
+        "package": "AppCheck",
+        "repositoryURL": "https://github.com/google/app-check.git",
+        "state": {
+          "branch": null,
+          "revision": "87dd288fc792bf9751e522e171a47df5b783b0b8",
+          "version": "11.1.0"
+        }
+      },
+      {
+        "package": "Firebase",
+        "repositoryURL": "https://github.com/firebase/firebase-ios-sdk",
+        "state": {
+          "branch": null,
+          "revision": "f909f901bfba9e27e4e9da83242a4915d6dd64bb",
+          "version": "11.3.0"
+        }
+      },
+      {
+        "package": "GoogleAppMeasurement",
+        "repositoryURL": "https://github.com/google/GoogleAppMeasurement.git",
+        "state": {
+          "branch": null,
+          "revision": "93406fd21b85e66e2d6dbf50b472161fd75c3f1f",
+          "version": "11.3.0"
+        }
+      },
+      {
+        "package": "GoogleDataTransport",
+        "repositoryURL": "https://github.com/google/GoogleDataTransport.git",
+        "state": {
+          "branch": null,
+          "revision": "617af071af9aa1d6a091d59a202910ac482128f9",
+          "version": "10.1.0"
+        }
+      },
+      {
+        "package": "GoogleUtilities",
+        "repositoryURL": "https://github.com/google/GoogleUtilities.git",
+        "state": {
+          "branch": null,
+          "revision": "53156c7ec267db846e6b64c9f4c4e31ba4cf75eb",
+          "version": "8.0.2"
+        }
+      },
+      {
+        "package": "gRPC",
+        "repositoryURL": "https://github.com/google/grpc-binary.git",
+        "state": {
+          "branch": null,
+          "revision": "f56d8fc3162de9a498377c7b6cea43431f4f5083",
+          "version": "1.65.1"
+        }
+      },
+      {
+        "package": "GTMSessionFetcher",
+        "repositoryURL": "https://github.com/google/gtm-session-fetcher.git",
+        "state": {
+          "branch": null,
+          "revision": "a2ab612cb980066ee56d90d60d8462992c07f24b",
+          "version": "3.5.0"
+        }
+      },
+      {
+        "package": "InteropForGoogle",
+        "repositoryURL": "https://github.com/google/interop-ios-for-google-sdks.git",
+        "state": {
+          "branch": null,
+          "revision": "2d12673670417654f08f5f90fdd62926dc3a2648",
+          "version": "100.0.0"
+        }
+      },
+      {
         "package": "KeychainAccess",
         "repositoryURL": "https://github.com/kishikawakatsumi/KeychainAccess.git",
         "state": {
@@ -11,12 +92,30 @@
         }
       },
       {
+        "package": "leveldb",
+        "repositoryURL": "https://github.com/firebase/leveldb.git",
+        "state": {
+          "branch": null,
+          "revision": "a0bc79961d7be727d258d33d5a6b2f1023270ba1",
+          "version": "1.22.5"
+        }
+      },
+      {
+        "package": "nanopb",
+        "repositoryURL": "https://github.com/firebase/nanopb.git",
+        "state": {
+          "branch": null,
+          "revision": "b7e1104502eca3a213b46303391ca4d3bc8ddec1",
+          "version": "2.30910.0"
+        }
+      },
+      {
         "package": "NerdzNetworking",
         "repositoryURL": "https://github.com/nerdzlab/NerdzNetworking.git",
         "state": {
           "branch": null,
-          "revision": "8e31c804f8f9fb17fef8bb3e2d76a9b54baebecf",
-          "version": "2.0.0"
+          "revision": "2e54650dc3b71be7d9464bc1e4be38eeadb580b8",
+          "version": "2.0.2"
         }
       },
       {
@@ -24,8 +123,26 @@
         "repositoryURL": "https://github.com/nerdzlab/NerdzUtils.git",
         "state": {
           "branch": null,
-          "revision": "74ede578b15f542426672c68fd2c6cf435fb6be0",
-          "version": "1.0.90"
+          "revision": "b93ae4ce806613c36a7a2f909cb728378facc755",
+          "version": "1.0.92"
+        }
+      },
+      {
+        "package": "Promises",
+        "repositoryURL": "https://github.com/google/promises.git",
+        "state": {
+          "branch": null,
+          "revision": "540318ecedd63d883069ae7f1ed811a2df00b6ac",
+          "version": "2.4.0"
+        }
+      },
+      {
+        "package": "SwiftProtobuf",
+        "repositoryURL": "https://github.com/apple/swift-protobuf.git",
+        "state": {
+          "branch": null,
+          "revision": "ebc7251dd5b37f627c93698e4374084d98409633",
+          "version": "1.28.2"
         }
       },
       {
@@ -33,8 +150,8 @@
         "repositoryURL": "https://github.com/datatheorem/TrustKit.git",
         "state": {
           "branch": null,
-          "revision": "65d573e0e2687ea91ab0b1be377f9dd3eb1c2785",
-          "version": "2.0.1"
+          "revision": "d009bab582513e029924f394c2a3b974f10a44a6",
+          "version": "3.0.5"
         }
       },
       {
