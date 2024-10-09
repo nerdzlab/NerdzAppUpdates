@@ -13,8 +13,8 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     
     public enum Constants {
         public enum Keys {
-            public static let recommendedVersion = "recommended-version"
-            public static let requiredVersion = "required-version"
+            public static let recommendedVersion = "recommendedVersion"
+            public static let requiredVersion = "requiredVersion"
         }
     }
     
