@@ -35,8 +35,9 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
                 return
             }
             
-            if status == .error {
+            guard status != .error else {
                 completion(.failure(.apiError(error?.localizedDescription ?? "Unknown error")))
+                return
             }
             
             let recommendedVersion = self
