@@ -1,85 +1,87 @@
 # NerdzAppUpdates
 
 ## About
-NerdzAppUpdates is library that provide user posibility to check if currently installed version is up to date with distribution service.
 
-Library supports two types of updates hard updates, and soft updates.
+NerdzAppUpdates is a Swift package that lets an iOS app check whether the installed version is up to date with a distribution service. It supports two update flavors: hard updates (the user must update before continuing) and soft updates (the user is prompted but can skip).
 
-App supports multiple types of version providers:
-  - `AppStoreVersionProvider` - that uses Itunes lookup api, to retreive current AppStore version of the app and than perform version check.
-  - `BackendVersionProvider` - that provides ability for user to retreive current required and recommended versions of the app from your server.
-  - `FirebaseVersionProvider` - that uses Firebase remote config to retreive current required and recommended versions of the app.
+The library ships two built-in version providers:
 
-`AppStoreVersionProvider` is build to work with [Semantic Versioning](https://semver.org/) system.
-Hard update is triggered when app major number is different. For example, `1.0.0` - installed version and `2.0.0` - store provided.
-Soft update is triggered when app minor number is diffent. For example, `0.2.0` - installed version and `0.3.0` - store provided.
-When using `BackendVersionProvider` and `FirebaseVersionProvider` you can set required and recommendd version on your server by your own.
+1. `AppStoreVersionProvider`. Uses the public iTunes lookup API to retrieve the current App Store version, then performs a [semver](https://semver.org/) comparison against the installed `Bundle.main` version. A different major triggers a hard update (for example, installed `1.0.0` vs. store `2.0.0`). A different minor triggers a soft update (for example, installed `0.2.0` vs. store `0.3.0`).
+2. `FirebaseConfigVersionProvider`. Reads `recommendedVersion` and `requiredVersion` from Firebase Remote Config. Your server controls the policy, so the threshold for hard and soft updates is whatever you set in Remote Config.
 
-## Instalation
-You can install this library using Swift Package Manager.
-To install `AppStoreVersionProvider` use `provider/appstore` branch.
-To install `BackendVersionProvider` use `provider/backend` branch.
-To install `FirebaseVersionProvider` use `provider/firebase` branch.
+You can also implement your own provider by conforming to `VersionProviderType`. This is the recommended path when version policy comes from your own backend.
 
-## Use examples
-Example of use `AppStoreVersionProvider` with custom loading indication.
+## Installation
+
+Add the package via Swift Package Manager and depend on the `master` branch (or a tagged release once one is published):
+
+```
+.package(url: "https://github.com/nerdzlab/NerdzAppUpdates.git", branch: "master")
+```
+
+Requirements:
+
+* iOS 15 or later.
+* Swift 5.9 or later.
+* Firebase iOS SDK 12.x (pulled transitively).
+
+Note. Earlier versions of this project documented installation from per-provider branches (`provider/appstore`, `provider/backend`, `provider/firebase`). Those branches are archived and no longer maintained. Use `master`.
+
+## Usage example
+
+Below is a minimal `UIApplicationDelegate` that wires up `AppStoreVersionProvider` with a custom loading screen, a soft update screen, and a hard update screen.
 
 ```swift
-import NerdzAppUpdates // Line 1
+import NerdzAppUpdates
 import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    
-    private lazy var versionVerifyer: VersionVerifier =  { // Line 2
-    
-        let provider = AppStoreVersionProvider(country: .germany) // Line 3
-    
-        let verifier = VersionVerifier(
+
+    private lazy var versionVerifier: VersionVerifier = {
+        let provider = AppStoreVersionProvider(country: .germany)
+
+        return VersionVerifier(
             versionDataProvider: provider,
-            loadingIndicationMode: .screen(LoaderScreen()), // Line 4
-            softUpdateMode: .screen(SoftUpdateScreen(), true), // Line 5
-            hardUpdateMode: .screen(HardUpdateScreen()) // Line 6
+            loadingIndicationMode: .screen(LoaderScreen()),
+            softUpdateMode: .screen(SoftUpdateScreen(), true),
+            hardUpdateMode: .screen(HardUpdateScreen())
         )
-        
-        return verifier
     }()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
-    
-        verifyVersion() // Line 7
-        
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+    ) -> Bool {
+        verifyVersion()
         return true
     }
-    
+
     private func verifyVersion() {
-        versionVerifyer.verifyVersion { [weak self] result in // Line 8
+        versionVerifier.verifyVersion { [weak self] result in
             guard case .failure(let error) = result else {
                 return
             }
-            
-            self?.showError(error.localizedDescription) // Line 9
+            self?.showError(error.localizedDescription)
         }
     }
 }
 ```
-Let's go through some important lines of code of above mentioned snippet.
-  - Line 1 - import library
-  - Line 2 - version verifier object initialization
-  - Line 3 - initializition of version provider
-  - Line 4 - passing custom screen for loading indication, typicaly is copy of app launch storyboard with loading indicator
-  - Line 5 - passing soft update configuration, where `SoftUpdateScreen()` is screen that provides user posibility to open app distribution service,
-or skip an update, and `animated` - is boolean option to animate dissapearing of screen mentioned above or not
-  - Line 6 - passing hard update configuration with screen which should be displayed in case hard update is needed
-  - Line 7 - calling a use defined function to trigger start of version verification
-  - Line 8 - calling library function 
-  - Line 9 - displaying error in case of verification check
 
-## PAY ATTENTION. 
-  1. Make sure to store reference to versionVerifier object, so this object won't be deinited before the version check is completed.
-  2. In case you're using `AppStoreVersionProvider`, please specify country in version provider initializer. You can see list of available countries in [AppStoreCountry file](https://github.com/nerdzlab/NerdzAppUpdates/blob/provider/appstore/Sources/NerdzAppUpdates/VersionProviders/AppStore/AppStoreCountry.swift).
-  
-  # License
+Key points:
 
-  This code is distributed under the MIT license. See the `LICENSE` file for more info.
+* `VersionVerifier` accepts one or more providers (variadic). Pass several if you want App Store and Remote Config results combined in a single check.
+* `loadingIndicationMode` is optional. Use `.screen(_:)` for a full-screen loader (typically a copy of your launch storyboard), `.custom(onStart:onStop:)` to drive your own indicator, or `.none`.
+* `softUpdateMode` supports `.screen(_:animated:)`, `.alert(_:)`, and `.custom(_:)`.
+* `hardUpdateMode` supports `.screen(_:)` and `.custom(_:)`. The screen variant replaces the key window's root view controller, so the user cannot dismiss it without updating.
+
+## Pay attention
+
+1. Keep a strong reference to the `VersionVerifier` instance until `verifyVersion` calls back. If the object is deallocated mid-check, the completion never fires.
+2. When using `AppStoreVersionProvider`, pass the correct country in the initializer. The default country list lives in [`AppStoreCountry.swift`](Sources/NerdzAppUpdates/VersionProviders/AppStore/AppStoreCountry.swift).
+3. The hard update flow swaps the key window's root view controller. Make sure any global state (analytics, background tasks) tolerates that.
+
+## License
+
+MIT. See [`LICENSE`](LICENSE).
