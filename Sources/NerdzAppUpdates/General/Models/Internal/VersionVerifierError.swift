@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum VersionVerifierError: Error {
+public enum VersionVerifierError: Error, Equatable, Sendable {
     case unknownError
     case failedToRetreiveCurrentVersion
     case apiError(String)

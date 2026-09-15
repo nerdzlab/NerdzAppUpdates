@@ -9,7 +9,7 @@ import Foundation
 import NerdzUtils
 
 /// Enum with types of updates
-public enum AppUpdateType {
+public enum AppUpdateType: Equatable, Sendable {
     /// optional update, could be sciped
     case softUpdate
     

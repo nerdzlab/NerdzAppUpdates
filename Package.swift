@@ -30,6 +30,13 @@ let package = Package(
                 .product(name: "Version", package: "Version"),
                 .product(name: "FirebaseRemoteConfig", package: "Firebase")
             ]
+        ),
+        .testTarget(
+            name: "NerdzAppUpdatesTests",
+            dependencies: [
+                "NerdzAppUpdates",
+                .product(name: "Version", package: "Version")
+            ]
         )
     ]
 )
