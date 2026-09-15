@@ -20,16 +20,24 @@ public enum AppUpdateType: Equatable, Sendable {
     case notNeeded
     
     init(recommendedVersion: String?, requiredVersion: String?) {
-        if let currentVersion = Bundle.main.nz.appVersion {
-            if requiredVersion?.nz.isVersion(greaterThan: currentVersion) == true {
-                self = .hardUpdate
-            }
-            else if recommendedVersion?.nz.isVersion(greaterThan: currentVersion) == true {
-                self = .softUpdate
-            }
-            else {
-                self = .notNeeded
-            }
+        self.init(
+            recommendedVersion: recommendedVersion,
+            requiredVersion: requiredVersion,
+            currentVersion: Bundle.main.nz.appVersion
+        )
+    }
+
+    init(recommendedVersion: String?, requiredVersion: String?, currentVersion: String?) {
+        guard let currentVersion else {
+            self = .notNeeded
+            return
+        }
+
+        if requiredVersion?.nz.isVersion(greaterThan: currentVersion) == true {
+            self = .hardUpdate
+        }
+        else if recommendedVersion?.nz.isVersion(greaterThan: currentVersion) == true {
+            self = .softUpdate
         }
         else {
             self = .notNeeded
