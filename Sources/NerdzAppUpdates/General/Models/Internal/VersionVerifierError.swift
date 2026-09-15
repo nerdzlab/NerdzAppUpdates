@@ -14,7 +14,6 @@ public enum VersionVerifierError: Error, Equatable, Sendable {
     
     /// AppStore
     case theAppWasNotFoundOnAppStore
-    case osIsNoLongerSupported
     case failedToParseAppStoreVersion
 
 }
