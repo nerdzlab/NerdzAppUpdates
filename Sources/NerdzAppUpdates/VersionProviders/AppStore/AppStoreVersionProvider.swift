@@ -51,18 +51,8 @@ public class AppStoreVersionProvider: NSObject, VersionProviderType {
             return
         }
         
-        if currentAppVersion.major < appStoreVersion.major {
-            completion(.success((.hardUpdate, appStoreAppInfo.version)))
-        }
-        else if currentAppVersion.major == appStoreVersion.major,
-                let minor = currentAppVersion.minor,
-                let storeMinor = appStoreVersion.minor,
-                minor < storeMinor {
-            completion(.success((.softUpdate, appStoreAppInfo.version)))
-        }
-        else {
-            completion(.success((.notNeeded, appStoreAppInfo.version)))
-        }
+        let updateType = AppStoreVersionComparator.updateType(current: currentAppVersion, store: appStoreVersion)
+        completion(.success((updateType, appStoreAppInfo.version)))
     }
     
     /// Function to verify app using Itunes api
