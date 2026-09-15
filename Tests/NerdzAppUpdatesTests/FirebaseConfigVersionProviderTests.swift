@@ -19,6 +19,11 @@ struct FirebaseConfigVersionProviderTests {
             options.apiKey = "A" + String(repeating: "a", count: 38)
             options.bundleID = Bundle.main.bundleIdentifier ?? "com.test.app"
             FirebaseApp.configure(options: options)
+            // Suppress Firebase Installations auto-init network activity: this test only
+            // reads local key defaults and must never phone home to Google. (FirebaseOptions
+            // has no isMeasurementEnabled in Firebase 12.x, so disable data collection on
+            // the configured app instead.)
+            FirebaseApp.app()?.isDataCollectionDefaultEnabled = false
         }
     }
 
