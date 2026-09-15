@@ -12,6 +12,11 @@
 
 ## Global Constraints
 
+- VERIFICATION METHOD (overrides every `swift build` / `swift test` command written in the tasks below). This library imports UIKit and pulls FirebaseRemoteConfig, so it cannot build or test on the macOS host. All building and testing runs on an iOS Simulator via xcodebuild, wrapped in committed helper scripts:
+  - Run the test suite: `bash scripts/test-ios.sh` (builds for testing on a generic iOS Simulator, then runs on iPhone 16 Pro). There is no `--filter`; the suite is small, run all of it.
+  - Strict concurrency gate: `bash scripts/strict-concurrency.sh`.
+  - Coverage (Task 13): `COVERAGE=1 bash scripts/test-ios.sh` then read the `.xcresult` with `xcrun xccov`.
+  Wherever a task step says `swift test ...` or `swift build ...`, use the corresponding script instead.
 - swift-tools-version 5.9. Do not raise or lower it.
 - Platforms stay `platforms: [.iOS(.v15)]`. Do not add other platforms (UIKit plus Firebase preclude Linux and non iOS).
 - Target version is 3.0.0. This is a breaking major release.
@@ -722,8 +727,8 @@ Make the library clean under complete strict concurrency. Invoke `/nerd-swift-co
 
 - [ ] **Step 1: Establish the baseline failure**
 
-Run: `swift build -Xswiftc -strict-concurrency=complete 2>&1 | grep -c warning`
-Expected: a nonzero count. Record it.
+Run: `bash scripts/strict-concurrency.sh`
+Expected: it reports concurrency warnings in Sources (non-clean). Record them.
 
 - [ ] **Step 2: Mark closure typealiases @Sendable**
 
@@ -773,12 +778,12 @@ At the top of `VersionVerifier.swift` add `import os`, declare `private static l
 
 - [ ] **Step 7: Build strict concurrency clean**
 
-Run: `swift build -Xswiftc -strict-concurrency=complete 2>&1 | grep warning || echo "clean"`
-Expected: `clean`. If the `results` buffer in `verifyVersion` warns about capture, hoist it into a small `@unchecked Sendable` lock guarded box or fill it via a `TaskGroup`. Document the chosen fix inline.
+Run: `bash scripts/strict-concurrency.sh`
+Expected: `strict-concurrency clean`. If the `results` buffer in `verifyVersion` warns about capture, hoist it into a small `@unchecked Sendable` lock guarded box or fill it via a `TaskGroup`. Document the chosen fix inline.
 
 - [ ] **Step 8: Run tests**
 
-Run: `swift test`
+Run: `bash scripts/test-ios.sh`
 Expected: PASS. If `@MainActor` isolation breaks a test, annotate that test `@MainActor`.
 
 - [ ] **Step 9: Commit**
@@ -1061,18 +1066,18 @@ concurrency:
   cancel-in-progress: true
 jobs:
   test:
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode_15.4.app
-      - run: swift --version
-      - run: swift build
-      - run: swift test
-      - run: swift build -Xswiftc -strict-concurrency=complete
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Test on iOS Simulator
+        run: bash scripts/test-ios.sh
+      - name: Strict concurrency
+        run: bash scripts/strict-concurrency.sh
 ```
 
-Adjust the Xcode path to the newest available on the runner if 15.4 is not present.
+Pick a `SIM_NAME` that exists on the runner image (the script defaults to iPhone 16 Pro). If the default runner Xcode lacks that simulator, set `SIM_NAME` via `env:` to one listed by `xcrun simctl list devices available` on the runner, or add a step that selects Xcode with `sudo xcode-select -s`.
 
 - [ ] **Step 2: Validate YAML locally**
 
@@ -1114,14 +1119,13 @@ Resolve conflicts as they arise (the VersionVerifier and provider files are touc
 - [ ] **Step 2: Run the full verification gate**
 
 ```bash
-swift build
-swift build -Xswiftc -strict-concurrency=complete
-swift test --enable-code-coverage
-PROF=$(find .build -name '*.profdata' | head -1)
-BIN=$(find .build -name '*.xctest' -type d | head -1)
-xcrun llvm-cov report "$BIN/Contents/MacOS/$(basename "$BIN" .xctest)" -instr-profile "$PROF" -ignore-filename-regex='Tests/' | tail -1
+bash scripts/strict-concurrency.sh
+COVERAGE=1 bash scripts/test-ios.sh
+# Coverage for Sources only, from the .xcresult produced under .build/dd:
+XCRESULT=$(find .build/dd/Logs/Test -name '*.xcresult' | head -1)
+xcrun xccov view --report "$XCRESULT" | grep -iE 'NerdzAppUpdates|Sources'
 ```
-Expected: builds clean, tests pass, coverage 80 percent or better on Sources.
+Expected: strict-concurrency clean, tests pass, coverage 80 percent or better on Sources.
 
 - [ ] **Step 3: Final review**
 
