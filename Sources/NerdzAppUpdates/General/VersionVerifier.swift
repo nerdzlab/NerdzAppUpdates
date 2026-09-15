@@ -34,68 +34,38 @@ public class VersionVerifier {
         self.loadingIndicationMode = loadingIndicationMode
     }
     
-    /// Function that handle version provider completion
-    /// and triggers showing of hard update and soft update, or skiping app update
-    private func handleDataProviderVersionVerification(
-        with results: [Result<VersionProviderResult, VersionVerifierError>]
-    ) -> Result<VersionProviderResult, VersionVerifierError>? {
-        
-        var softUpdateResult: Result<VersionProviderResult, VersionVerifierError>?
-        
-        for result in results {
-            switch result {
-            case .success(let checkResult):
-                switch checkResult.type {
-                case .hardUpdate:
-                    guard let hardUpdateMode = hardUpdateMode else {
-                        continue
-                    }
-                    
-                    switch hardUpdateMode {
-                    case .screen(let screen):
-                        screen.latestVersion = checkResult.latestVersion
-                        showScreenForHardUpdate(screen)
-                        
-                    case .custom(let action):
-                        action(checkResult.latestVersion)
-                    }
-                    
-                    return result
-                    
-                case .softUpdate:
-                    softUpdateResult = result
-                    continue
-                    
-                case .notNeeded:
-                    continue
-                }
-                
-            case .failure:
-                continue
+    /// Function that consumes the resolved `UpdatePresentation` and triggers
+    /// showing of hard update, soft update, or skips presentation entirely.
+    private func present(_ presentation: UpdatePresentation) {
+        switch presentation {
+        case .hardUpdate(let latestVersion):
+            guard let hardUpdateMode else {
+                return
             }
-        }
-        
-        if case .success(let checkResult) = softUpdateResult, checkResult.type == .softUpdate {
-            guard let softUpdateMode = softUpdateMode else {
-                return softUpdateResult
+            switch hardUpdateMode {
+            case .screen(let screen):
+                screen.latestVersion = latestVersion
+                showScreenForHardUpdate(screen)
+            case .custom(let action):
+                action(latestVersion)
             }
-            
+
+        case .softUpdate(let latestVersion):
+            guard let softUpdateMode else {
+                return
+            }
             switch softUpdateMode {
             case .screen(let screen, let animated):
-                screen.latestVersion = checkResult.latestVersion
+                screen.latestVersion = latestVersion
                 showScreenForSoftUpdate(screen, animated: animated)
-                
             case .alert(let alert):
                 show(alert)
-                
             case .custom(let action):
-                action(checkResult.latestVersion)
+                action(latestVersion)
             }
-            
-            return softUpdateResult
-        }
-        else {
-            return results.first
+
+        case .none:
+            break
         }
     }
     
@@ -175,25 +145,26 @@ public class VersionVerifier {
     /// with error or without and update is not needed
     public func verifyVersion(completion: @escaping AppUpdateAction) {
         startLoading()
-        
-        var results: [Result<VersionProviderResult, VersionVerifierError>] = []
-        
+
+        let providers = versionDataProviders
+        var results = [Result<VersionProviderResult, VersionVerifierError>?](repeating: nil, count: providers.count)
         let dispatchGroup = DispatchGroup()
-        
-        for versionDataProvider in versionDataProviders {
+
+        for (index, provider) in providers.enumerated() {
             dispatchGroup.enter()
-            versionDataProvider.verifyAppVersion { result in
-                results.append(result)
+            provider.verifyAppVersion { result in
+                results[index] = result
                 dispatchGroup.leave()
             }
         }
-        
+
         dispatchGroup.notify(queue: .main) { [weak self] in
             self?.stopLoading()
-            
-            let result = self?.handleDataProviderVersionVerification(with: results) ?? .failure(.unknownError)
-            
-            completion(result)
+
+            let collected = results.compactMap { $0 }
+            let outcome = UpdateResolution.selected(from: collected)
+            self?.present(outcome.presentation)
+            completion(outcome.chosen ?? .failure(.unknownError))
         }
     }
 }
