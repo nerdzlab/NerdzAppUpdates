@@ -35,7 +35,8 @@ let package = Package(
             name: "NerdzAppUpdatesTests",
             dependencies: [
                 "NerdzAppUpdates",
-                .product(name: "Version", package: "Version")
+                .product(name: "Version", package: "Version"),
+                .product(name: "FirebaseCore", package: "Firebase")
             ]
         )
     ]

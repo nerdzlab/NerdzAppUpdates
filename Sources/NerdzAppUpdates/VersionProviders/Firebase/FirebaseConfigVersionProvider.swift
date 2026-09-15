@@ -19,10 +19,10 @@ public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
     }
     
     private let config: RemoteConfig
-    private let recommendedKey: String
-    private let requiredKey: String
+    let recommendedKey: String
+    let requiredKey: String
     
-    public init(config: RemoteConfig = .remoteConfig(), recommendedKey: String = Constants.Keys.requiredVersion, requiredKey: String = Constants.Keys.requiredVersion) {
+    public init(config: RemoteConfig = .remoteConfig(), recommendedKey: String = Constants.Keys.recommendedVersion, requiredKey: String = Constants.Keys.requiredVersion) {
         self.config = config
         self.recommendedKey = recommendedKey
         self.requiredKey = requiredKey
