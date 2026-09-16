@@ -8,10 +8,10 @@ This article walks through a minimal setup using ``AppStoreVersionProvider``, wh
 
 ## Add the dependency
 
-Add the package via Swift Package Manager, depending on a tagged release:
+Add the package via Swift Package Manager, depending on the `master` branch (or a tagged release once one is published):
 
 ```swift
-.package(url: "https://github.com/nerdzlab/NerdzAppUpdates.git", from: "3.0.0")
+.package(url: "https://github.com/nerdzlab/NerdzAppUpdates.git", branch: "master")
 ```
 
 ## Create and retain a verifier
@@ -75,7 +75,7 @@ func verifyVersion() async {
 
 ## Configure presentation
 
-`loadingIndicationMode`, `softUpdateMode`, and `hardUpdateMode` are all optional. Supply a `.screen(_:)` case with your own view controllers to present a loader, a soft update prompt, or a blocking hard update screen, or use `.custom(_:)` to drive your own UI. See ``LoadingIndicationMode``, ``SoftUpdateMode``, and ``HardUpdateMode`` for every option.
+`softUpdateMode` and `hardUpdateMode` are optional and default to `nil`, so pass `nil` to skip that prompt. `loadingIndicationMode` is not optional and defaults to `.none`. Supply a `.screen(_:)` case (for the loader and hard update) or a `.screen(_:_:)` case (for the soft update, which also takes an animated `Bool`) with your own view controllers to present a loader, a soft update prompt, or a blocking hard update screen, or use `.custom(_:)` to drive your own UI. See ``LoadingIndicationMode``, ``SoftUpdateMode``, and ``HardUpdateMode`` for every option.
 
 ## See Also
 
