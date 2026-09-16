@@ -13,6 +13,12 @@ jobs:
       - uses: actions/checkout@v4
       - name: Show Xcode version
         run: xcodebuild -version
+      - name: Install lint tools
+        run: brew install swiftlint swiftformat
+      - name: SwiftLint
+        run: swiftlint --strict
+      - name: SwiftFormat lint
+        run: swiftformat --lint Sources Tests
       - name: Test on iOS Simulator
         run: bash scripts/test-ios.sh
       - name: Strict concurrency
