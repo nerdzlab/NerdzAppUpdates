@@ -34,4 +34,13 @@ struct AppStoreVersionComparatorTests {
         let expected = AppUpdateType.notNeeded
         #expect(AppStoreVersionComparator.updateType(current: current, store: store) == expected)
     }
+
+    @Test("A current version with no minor component needs no update, even behind on minor")
+    func testWhenCurrentMinorNilShouldReturnNotNeeded() throws {
+        let current = try Version("2")
+        let store = try Version("2.3.0")
+        let expected = AppUpdateType.notNeeded
+        #expect(current.minor == nil)
+        #expect(AppStoreVersionComparator.updateType(current: current, store: store) == expected)
+    }
 }

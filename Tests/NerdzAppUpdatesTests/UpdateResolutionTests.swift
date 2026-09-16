@@ -25,6 +25,29 @@ struct UpdateResolutionTests {
         #expect(outcome.presentation == .softUpdate(latestVersion: latest))
     }
 
+    @Test("The first soft update wins when multiple are present")
+    func testWhenTwoSoftUpdatesShouldSelectFirst() {
+        let firstLatest = "2.5.0"
+        let secondLatest = "2.6.0"
+        let results = [
+            TestData.success(.softUpdate, firstLatest),
+            TestData.success(.softUpdate, secondLatest)
+        ]
+        let outcome = UpdateResolution.selected(from: results)
+        #expect(outcome.presentation == .softUpdate(latestVersion: firstLatest))
+    }
+
+    @Test("A hard update followed by a soft update still selects hard")
+    func testWhenHardThenSoftShouldSelectHard() {
+        let latest = "3.0.0"
+        let results = [
+            TestData.success(.hardUpdate, latest),
+            TestData.success(.softUpdate, "2.5.0")
+        ]
+        let outcome = UpdateResolution.selected(from: results)
+        #expect(outcome.presentation == .hardUpdate(latestVersion: latest))
+    }
+
     @Test("No update is presented when nothing is needed")
     func testWhenNothingNeededShouldPresentNone() {
         let results = [TestData.success(.notNeeded, "2.4.0")]
