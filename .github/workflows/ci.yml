@@ -1,0 +1,19 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Test on iOS Simulator
+        run: bash scripts/test-ios.sh
+      - name: Strict concurrency
+        run: bash scripts/strict-concurrency.sh
