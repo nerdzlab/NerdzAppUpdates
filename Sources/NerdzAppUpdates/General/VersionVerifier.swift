@@ -129,7 +129,7 @@ public final class VersionVerifier {
             MainActor.assumeIsolated { work() }
         }
         else {
-            DispatchQueue.main.async { work() }
+            DispatchQueue.main.async { MainActor.assumeIsolated { work() } }
         }
     }
     
