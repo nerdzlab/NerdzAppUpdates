@@ -18,7 +18,7 @@ jobs:
       - name: SwiftLint
         run: swiftlint --strict
       - name: SwiftFormat lint
-        run: swiftformat --lint Sources Tests
+        run: swiftformat Sources Tests --lint
       - name: Test on iOS Simulator
         run: bash scripts/test-ios.sh
       - name: Strict concurrency
