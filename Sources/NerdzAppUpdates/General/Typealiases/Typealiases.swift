@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias VersionVerifierEmptyAction = () -> Void
+public typealias VersionVerifierEmptyAction = @Sendable () -> Void
 public typealias VersionProviderResult = (type: AppUpdateType, latestVersion: String?)
-public typealias AppUpdateAction = (Result<VersionProviderResult, VersionVerifierError>) -> Void
-public typealias VersionVerifierStringAction = (String?) -> Void
+public typealias AppUpdateAction = @Sendable (Result<VersionProviderResult, VersionVerifierError>) -> Void
+public typealias VersionVerifierStringAction = @Sendable (String?) -> Void

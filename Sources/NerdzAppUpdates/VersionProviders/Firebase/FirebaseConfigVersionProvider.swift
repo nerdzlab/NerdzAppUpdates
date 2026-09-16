@@ -9,7 +9,11 @@ import Foundation
 import FirebaseRemoteConfig
 import NerdzUtils
 
-public class FirebaseConfigVersionProvider: NSObject, VersionProviderType {
+/// `@unchecked Sendable` invariant: `recommendedKey`/`requiredKey` are immutable `let` bindings.
+/// `config` (a Firebase `RemoteConfig` reference type) is likewise a `let` set once at `init` and
+/// is only ever accessed from within its own `fetchAndActivate` completion callback, so there is
+/// no concurrent mutation of shared state across isolation domains.
+public final class FirebaseConfigVersionProvider: NSObject, VersionProviderType, @unchecked Sendable {
     
     public enum Constants {
         public enum Keys {

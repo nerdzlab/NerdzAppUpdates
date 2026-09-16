@@ -10,7 +10,7 @@ import Foundation
 /// Region or country of an App Store in which an app can be available.
 ///
 /// [List of country codes](https://help.apple.com/app-store-connect/#/dev997f9cf7c)
-public struct AppStoreCountry {
+public struct AppStoreCountry: Sendable {
     /// Raw country code. ex. "US" for United States.
     public let code: String?
 }

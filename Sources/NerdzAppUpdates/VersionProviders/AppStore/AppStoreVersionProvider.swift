@@ -9,14 +9,17 @@ import Foundation
 import NerdzNetworking
 import Version
 
-public class AppStoreVersionProvider: NSObject, VersionProviderType {
-   
+/// `@unchecked Sendable` invariant: all stored properties (`appStoreEndpoint`, `country`) are
+/// immutable `let` bindings set once at `init` and never mutated afterwards, so instances can be
+/// safely shared across isolation domains.
+public final class AppStoreVersionProvider: NSObject, VersionProviderType, @unchecked Sendable {
+
     private enum Constants {
         static let iTunesBaseUrl = URL(string: "https://itunes.apple.com")!
     }
-    
+
     private let appStoreEndpoint: Endpoint
-    public var country: AppStoreCountry
+    public let country: AppStoreCountry
     
     /// Init object with country, if your app is not present in usa AppStore
     public init(country: AppStoreCountry) {

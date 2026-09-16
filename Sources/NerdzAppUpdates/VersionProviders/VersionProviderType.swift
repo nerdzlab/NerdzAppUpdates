@@ -9,6 +9,6 @@ import Foundation
 
 /// Base protocol of version provider
 /// In case of custom implementation of version provider, you should implement this protocol
-public protocol VersionProviderType: NSObject {
+public protocol VersionProviderType: NSObjectProtocol, Sendable {
     func verifyAppVersion(completion: @escaping AppUpdateAction)
 }
