@@ -10,7 +10,7 @@
 --patternlet inline
 
 # Imports are grouped by origin (framework first, then local packages), not
-# strictly alphabetically sorted — see nerd-swift-codestyle formatting rules.
+# strictly alphabetically sorted (see nerd-swift-codestyle formatting rules).
 --disable sortImports
 
 # Renames Swift Testing `test...` functions to drop the `test` prefix. This is
