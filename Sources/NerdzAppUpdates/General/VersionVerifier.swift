@@ -210,6 +210,16 @@ public final class VersionVerifier {
             }
         }
     }
+
+    /// Async variant of ``verifyVersion(completion:)``. Presentation still happens on the main actor.
+    /// - Returns: The selected provider result, or a failure if none was produced.
+    public func verifyVersion() async -> Result<VersionProviderResult, VersionVerifierError> {
+        await withCheckedContinuation { continuation in
+            verifyVersion { result in
+                continuation.resume(returning: result)
+            }
+        }
+    }
 }
 
 /// Lock-guarded box collecting per-provider verification results.
