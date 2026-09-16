@@ -35,9 +35,11 @@ public protocol SoftUpdateScreenType: UIViewController {
 }
 
 public extension SoftUpdateScreenType {
-    /// Default implementation that performs no animation and does not call `completion`.
-    /// Override this to animate the screen away and call `completion` when finished.
-    func animateDissapear(completion _: VersionVerifierEmptyAction?) {}
+    /// Default implementation that performs no animation and calls `completion` immediately.
+    /// Override this to animate the screen away and call `completion` when the animation finishes.
+    func animateDissapear(completion: VersionVerifierEmptyAction?) {
+        completion?()
+    }
 
     /// Default implementation that presents this screen as an overlay window.
     func presentAsOverlay() {

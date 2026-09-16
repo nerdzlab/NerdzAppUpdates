@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 * Fixed a data race in `verifyVersion` where results from multiple providers were collected without synchronization.
+* Fixed the default `SoftUpdateScreenType.animateDissapear(completion:)` implementation to invoke its completion. Previously a soft update screen relying on the default with `animated: true` never dismissed, leaving a stuck overlay.
 
 ### Behavior changes
 
