@@ -9,8 +9,12 @@ import UIKit
 import NerdzUtils
 import os
 
-/// Class that responsible for version verification
-/// Warning - you should store reference to this object in some class, to make sure, object not deinited before version check completed
+/// Verifies the installed app version against one or more distribution service providers, then
+/// presents a soft or hard update prompt if one is needed.
+///
+/// > Important: Keep a strong reference to this instance until the version check completes. If
+/// > it is deallocated mid check, the completion closure passed to ``verifyVersion(completion:)``
+/// > never fires, and a call awaiting ``verifyVersion()`` never resumes.
 @MainActor
 public final class VersionVerifier {
 
@@ -30,11 +34,18 @@ public final class VersionVerifier {
             .first { $0.isKeyWindow }
     }
 
-    /// To initialize version verifier you should pass
-    /// `versionProvider` - object, that responsible for retreiving app update info from server
-    /// `loadingIndicationMode` - configuration of loading indication
-    /// `softUpdateMode` - configuration of displaying soft update warning
-    /// `hardUpdateMode` - configuration of displaying hard update warning
+    /// Creates a version verifier configured with one or more providers and presentation modes.
+    ///
+    /// - Parameters:
+    ///   - versionDataProvider: One or more providers responsible for retrieving app update
+    ///     information from a server. Pass several to combine results from multiple sources
+    ///     (for example App Store and Remote Config) into a single check.
+    ///   - loadingIndicationMode: Configuration for indicating that a check is in progress.
+    ///     Defaults to ``LoadingIndicationMode/none``.
+    ///   - softUpdateMode: Configuration for presenting a skippable soft update. Pass `nil` to
+    ///     never present a soft update.
+    ///   - hardUpdateMode: Configuration for presenting a blocking hard update. Pass `nil` to
+    ///     never present a hard update.
     public init(
         versionDataProvider: VersionProviderType...,
         loadingIndicationMode: LoadingIndicationMode = .none,
@@ -82,8 +93,9 @@ public final class VersionVerifier {
         }
     }
     
-    /// Showing screen for hard update
-    /// Warning - be careful, hard update option changes your current window root controller
+    /// Shows the given screen for a hard update.
+    ///
+    /// > Warning: This replaces the current window's root view controller.
     private func showScreenForHardUpdate(_ screen: UIViewController) {
         guard let currentWindow = keyWindow else {
             return
@@ -92,10 +104,11 @@ public final class VersionVerifier {
         currentWindow.rootViewController = screen
     }
     
-    /// Showing screen for soft update
-    /// Function adds additional window above your current window
-    /// You can dissmiss this window by calling `onDissmiss` in your screen
-    /// You can add animations for dismissing screen implementing `animateDissapear` function
+    /// Shows the given screen for a soft update.
+    ///
+    /// Adds an additional window above the current window. You can dismiss this window by
+    /// calling `onDissmiss` in your screen, and animate dismissal by implementing
+    /// `animateDissapear`.
     private func showScreenForSoftUpdate(_ screen: SoftUpdateScreenType, animated: Bool) {
         (screen as? UIViewController)?.nz.presentAsOverlay()
         // `onDissmiss`/`animateDissapear` are typed via the now-`@Sendable`
@@ -176,9 +189,19 @@ public final class VersionVerifier {
         }
     }
     
-    /// Function wich responsible for version verification
-    /// Parameter `completion` is responsible in notifiing api caller about if version check was completed
-    /// with error or without and update is not needed
+    /// Checks the installed app version against every configured provider and presents the
+    /// resolved update.
+    ///
+    /// Aggregates the results of all providers passed to
+    /// ``init(versionDataProvider:loadingIndicationMode:softUpdateMode:hardUpdateMode:)``. A hard
+    /// update takes precedence over a soft update, which takes precedence over no update needed.
+    /// Presentation (loading indicator, soft update, hard update) runs on the main actor.
+    ///
+    /// > Important: Keep a strong reference to this instance until `completion` is called. If it
+    /// > deallocates mid check, `completion` never fires.
+    ///
+    /// - Parameter completion: Called on the main actor with the selected provider result, or a
+    ///   failure if none of the providers succeeded.
     public func verifyVersion(completion: @escaping AppUpdateAction) {
         startLoading()
 
@@ -211,7 +234,13 @@ public final class VersionVerifier {
         }
     }
 
-    /// Async variant of ``verifyVersion(completion:)``. Presentation still happens on the main actor.
+    /// Async variant of ``verifyVersion(completion:)``. Presentation still happens on the main
+    /// actor.
+    ///
+    /// > Important: Keep a strong reference to this instance until this call returns. If it
+    /// > deallocates mid check, the underlying continuation never resumes and this call hangs
+    /// > forever.
+    ///
     /// - Returns: The selected provider result, or a failure if none was produced.
     public func verifyVersion() async -> Result<VersionProviderResult, VersionVerifierError> {
         await withCheckedContinuation { continuation in

@@ -7,14 +7,14 @@
 
 import UIKit
 
-/// Enum with all loading indication mode
+/// How ``VersionVerifier`` should indicate that a version check is in progress.
 public enum LoadingIndicationMode {
-    /// option to present screen
+    /// Presents the given screen while the check is in progress.
     case screen(LoadingIndicationScreenType)
-    
-    /// option to indicate loading using two closures, first closure indicates start loading, second - indicates stop loading
+
+    /// Calls the first closure when loading starts and the second closure when loading stops.
     case custom(VersionVerifierEmptyAction?, VersionVerifierEmptyAction?)
-    
-    /// don't indicate loading
+
+    /// Does not indicate loading.
     case none
 }

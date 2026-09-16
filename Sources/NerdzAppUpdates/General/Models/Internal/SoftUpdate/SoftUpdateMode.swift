@@ -7,14 +7,17 @@
 
 import UIKit
 
-/// Enum with different types that can be used for soft update
+/// How ``VersionVerifier`` should present an optional (skippable) update.
 public enum SoftUpdateMode {
-    /// option that responsible for presenting user screen, first parameter - screen itself, second parameter - is if screen should dissapear with animation
+    /// Presents the given screen as an overlay window.
+    ///
+    /// The `Bool` parameter controls whether the screen animates away when dismissed.
     case screen(SoftUpdateScreenType, Bool)
-    
-    /// option to present alert on top view controller
+
+    /// Presents the given alert on the top view controller.
     case alert(UIAlertController)
-    
-    /// option that call closure when soft update is needed 
+
+    /// Calls the given closure, passing the latest available version string, when a soft update
+    /// is available.
     case custom(VersionVerifierStringAction)
 }

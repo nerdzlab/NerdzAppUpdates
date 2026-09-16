@@ -15,6 +15,8 @@ public struct AppStoreCountry: Sendable {
     public let code: String?
 }
 
+/// Convenience static instances for every supported App Store country or region, named for the
+/// country and keyed by the code the iTunes lookup API expects.
 extension AppStoreCountry {
   public static let afghanistan: AppStoreCountry = "AFG"
   public static let unitedArabEmirates: AppStoreCountry = "AE"

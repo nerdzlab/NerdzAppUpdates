@@ -8,15 +8,15 @@
 import Foundation
 import NerdzUtils
 
-/// Enum with types of updates
+/// The kind of update, if any, that a version provider determined is available.
 public enum AppUpdateType: Equatable, Sendable {
-    /// optional update, could be sciped
+    /// An optional update. The user can skip it and continue using the current version.
     case softUpdate
-    
-    /// required update, user can't skip this update
+
+    /// A required update. The user cannot continue without updating.
     case hardUpdate
-    
-    /// update is not needed
+
+    /// No update is needed. The installed version is up to date.
     case notNeeded
     
     init(recommendedVersion: String?, requiredVersion: String?) {
