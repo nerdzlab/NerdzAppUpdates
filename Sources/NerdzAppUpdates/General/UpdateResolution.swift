@@ -11,7 +11,6 @@ enum UpdateResolution {
     static func selected(
         from results: [Result<VersionProviderResult, VersionVerifierError>]
     ) -> (chosen: Result<VersionProviderResult, VersionVerifierError>?, presentation: UpdatePresentation) {
-
         var softUpdate: (result: Result<VersionProviderResult, VersionVerifierError>, version: String?)?
 
         for result in results {

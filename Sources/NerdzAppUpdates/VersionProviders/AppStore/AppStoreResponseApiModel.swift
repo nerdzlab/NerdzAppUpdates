@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  AppStoreResponseApiModel.swift
+//
 //
 //  Created by Roman Kovalchuk on 13.07.2021.
 //
@@ -12,7 +12,6 @@ struct AppStoreResponseApiModel: Decodable {
 }
 
 struct ResultsResponseApiModel: Decodable {
-
     private enum CodingKeys: String, CodingKey {
         /// The appID JSON key.
         case appID = "trackId"

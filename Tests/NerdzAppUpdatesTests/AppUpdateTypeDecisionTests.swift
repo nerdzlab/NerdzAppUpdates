@@ -3,7 +3,6 @@ import Testing
 
 @Suite("AppUpdateType decision")
 struct AppUpdateTypeDecisionTests {
-
     @Test("Required version ahead of current is a hard update")
     func testWhenRequiredAheadShouldReturnHardUpdate() {
         let current = "1.0.0"

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  SoftUpdateScreenType.swift
+//
 //
 //  Created by Roman Kovalchuk on 12.07.2021.
 //
@@ -37,7 +37,7 @@ public protocol SoftUpdateScreenType: UIViewController {
 public extension SoftUpdateScreenType {
     /// Default implementation that performs no animation and does not call `completion`.
     /// Override this to animate the screen away and call `completion` when finished.
-    func animateDissapear(completion: VersionVerifierEmptyAction?) { }
+    func animateDissapear(completion _: VersionVerifierEmptyAction?) {}
 
     /// Default implementation that presents this screen as an overlay window.
     func presentAsOverlay() {

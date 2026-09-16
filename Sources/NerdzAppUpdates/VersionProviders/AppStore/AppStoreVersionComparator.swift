@@ -2,7 +2,6 @@ import Version
 
 /// Pure comparison of the installed version against the App Store version.
 enum AppStoreVersionComparator {
-
     /// Decides the update type from two semantic versions.
     /// A lower major triggers a hard update. A matching major with a lower minor triggers a soft update.
     /// - Parameters:

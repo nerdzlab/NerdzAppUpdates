@@ -1,6 +1,6 @@
 //
 //  AppUpdateType.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 13.07.2021.
 //
@@ -18,7 +18,7 @@ public enum AppUpdateType: Equatable, Sendable {
 
     /// No update is needed. The installed version is up to date.
     case notNeeded
-    
+
     init(recommendedVersion: String?, requiredVersion: String?) {
         self.init(
             recommendedVersion: recommendedVersion,

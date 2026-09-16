@@ -11,7 +11,6 @@ import FirebaseCore
 
 @Suite("FirebaseConfigVersionProvider")
 struct FirebaseConfigVersionProviderTests {
-
     init() {
         if FirebaseApp.app() == nil {
             let options = FirebaseOptions(googleAppID: "1:1234567890:ios:0123456789abcdef", gcmSenderID: "1234567890")

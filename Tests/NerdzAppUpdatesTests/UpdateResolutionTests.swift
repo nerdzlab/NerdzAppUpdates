@@ -3,7 +3,6 @@ import Testing
 
 @Suite("UpdateResolution")
 struct UpdateResolutionTests {
-
     @Test("A hard update wins over a soft update regardless of order")
     func testWhenHardAndSoftPresentShouldSelectHard() {
         let latest = "3.0.0"

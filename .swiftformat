@@ -1,0 +1,27 @@
+--swiftversion 5.9
+--exclude .build,.swiftpm
+
+# Existing code consistently places `else`/`catch` on their own line rather
+# than `} else {` / `} catch {`. Match that instead of churning every file.
+--elseposition next-line
+
+# Existing code writes `case .foo(let bar):` (let inline) rather than
+# `case let .foo(bar):`. Match that instead of churning every switch statement.
+--patternlet inline
+
+# Imports are grouped by origin (framework first, then local packages), not
+# strictly alphabetically sorted — see nerd-swift-codestyle formatting rules.
+--disable sortImports
+
+# Renames Swift Testing `test...` functions to drop the `test` prefix. This is
+# an identifier rename, not a formatting change, and is out of scope here.
+--disable swiftTestingTestCaseNames
+
+# Converts trivial closures (e.g. `{ $0.foo }`) to `\.foo` key paths. Marginal
+# value, not part of the team style guide, so left alone to minimize churn.
+--disable preferKeyPath
+
+# SwiftLint's `trailing_comma` rule (team default, disallows trailing commas)
+# conflicts with SwiftFormat's default of adding them to multiline literals.
+# Defer to SwiftLint's rule to avoid the two tools fighting each other.
+--disable trailingCommas

@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  HardUpdateScreenType.swift
+//
 //
 //  Created by Vasyl Khmil on 01.10.2023.
 //

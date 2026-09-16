@@ -1,6 +1,6 @@
 //
 //  FirebaseConfigVersionProvider.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 13.07.2021.
 //
@@ -19,7 +19,6 @@ import NerdzUtils
 /// is only ever accessed from within its own `fetchAndActivate` completion callback, so there is
 /// no concurrent mutation of shared state across isolation domains.
 public final class FirebaseConfigVersionProvider: NSObject, VersionProviderType, @unchecked Sendable {
-
     /// Default Remote Config key names used by this provider.
     public enum Constants {
         /// The Remote Config keys read by ``FirebaseConfigVersionProvider``.
@@ -50,7 +49,7 @@ public final class FirebaseConfigVersionProvider: NSObject, VersionProviderType,
         self.recommendedKey = recommendedKey
         self.requiredKey = requiredKey
     }
-    
+
     /// Fetches and activates Remote Config, then checks the installed app version against the
     /// recommended and required version thresholds.
     ///
@@ -59,32 +58,30 @@ public final class FirebaseConfigVersionProvider: NSObject, VersionProviderType,
     ///   on success, or a ``VersionVerifierError`` on failure.
     public func verifyAppVersion(completion: @escaping AppUpdateAction) {
         config.fetchAndActivate { [weak self] status, error in
-            guard let self = self else {
+            guard let self else {
                 return
             }
-            
+
             guard status != .error else {
                 completion(.failure(.apiError(error?.localizedDescription ?? "Unknown error")))
                 return
             }
-            
-            let recommendedVersion = self
-                .config
-                .configValue(forKey: self.recommendedKey)
+
+            let recommendedVersion = config
+                .configValue(forKey: recommendedKey)
                 .stringValue
-            
-            let requiredVersion = self
-                .config
-                .configValue(forKey: self.requiredKey)
+
+            let requiredVersion = config
+                .configValue(forKey: requiredKey)
                 .stringValue
-            
+
             let updateType = AppUpdateType(
                 recommendedVersion: recommendedVersion,
                 requiredVersion: requiredVersion
             )
-            
+
             let latestVersion = requiredVersion.nz.isVersion(greaterThan: recommendedVersion) ? requiredVersion : recommendedVersion
-            
+
             completion(.success((updateType, latestVersion)))
         }
     }

@@ -4,7 +4,6 @@ import Version
 
 @Suite("AppStoreVersionComparator")
 struct AppStoreVersionComparatorTests {
-
     @Test("Lower major than store is a hard update")
     func testWhenMajorBehindShouldReturnHardUpdate() throws {
         let current = try Version("1.4.0")

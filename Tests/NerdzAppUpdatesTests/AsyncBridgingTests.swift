@@ -7,6 +7,7 @@ private final class StubProvider: NSObject, VersionProviderType, @unchecked Send
     init(stubbed: Result<VersionProviderResult, VersionVerifierError>) {
         self.stubbed = stubbed
     }
+
     func verifyAppVersion(completion: @escaping AppUpdateAction) {
         completion(stubbed)
     }

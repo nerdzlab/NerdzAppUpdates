@@ -1,6 +1,6 @@
 //
 //  AppStoreVersionProvider.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 13.07.2021.
 //
@@ -16,7 +16,6 @@ import Version
 /// immutable `let` bindings set once at `init` and never mutated afterwards, so instances can be
 /// safely shared across isolation domains.
 public final class AppStoreVersionProvider: NSObject, VersionProviderType, @unchecked Sendable {
-
     private enum Constants {
         static let iTunesBaseUrl = URL(string: "https://itunes.apple.com")!
     }
@@ -33,11 +32,11 @@ public final class AppStoreVersionProvider: NSObject, VersionProviderType, @unch
     ///   United States App Store.
     public init(country: AppStoreCountry) {
         self.country = country
-        self.appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
-        
+        appStoreEndpoint = Endpoint(baseUrl: Constants.iTunesBaseUrl)
+
         super.init()
     }
-    
+
     /// Function that handle success response from itunes api, and verify app version
     private func handleGetAppInfoRequestSuccess(
         with data: AppStoreResponseApiModel,
@@ -47,26 +46,26 @@ public final class AppStoreVersionProvider: NSObject, VersionProviderType, @unch
             completion(.failure(.failedToRetreiveCurrentVersion))
             return
         }
-        
+
         guard let currentAppVersion = try? Version(currentAppVersionString) else {
             completion(.failure(.failedToRetreiveCurrentVersion))
             return
         }
-        
+
         guard let appStoreAppInfo = data.results.first else {
             completion(.failure(.theAppWasNotFoundOnAppStore))
             return
         }
-        
+
         guard let appStoreVersion = try? Version(appStoreAppInfo.version) else {
             completion(.failure(.failedToParseAppStoreVersion))
             return
         }
-        
+
         let updateType = AppStoreVersionComparator.updateType(current: currentAppVersion, store: appStoreVersion)
         completion(.success((updateType, appStoreAppInfo.version)))
     }
-    
+
     /// Checks the installed app version against the version published on the App Store.
     ///
     /// - Parameter completion: Called with the update type and latest App Store version string on
@@ -76,7 +75,7 @@ public final class AppStoreVersionProvider: NSObject, VersionProviderType, @unch
             completion(.failure(.unknownError))
             return
         }
-        
+
         GetLatestAppStoreVersionRequest(bundleId: bundleId, countryCode: country.code)
             .execute(on: appStoreEndpoint)
             .onSuccess { [weak self] response in

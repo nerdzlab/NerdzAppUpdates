@@ -1,6 +1,6 @@
 //
 //  VersionVerifier.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 12.07.2021.
 //
@@ -17,7 +17,6 @@ import os
 /// > never fires, and a call awaiting ``verifyVersion()`` never resumes.
 @MainActor
 public final class VersionVerifier {
-
     private static let logger = Logger(subsystem: "NerdzAppUpdates", category: "VersionVerifier")
 
     private let softUpdateMode: SoftUpdateMode?
@@ -54,10 +53,10 @@ public final class VersionVerifier {
     ) {
         self.softUpdateMode = softUpdateMode
         self.hardUpdateMode = hardUpdateMode
-        self.versionDataProviders = versionDataProvider
+        versionDataProviders = versionDataProvider
         self.loadingIndicationMode = loadingIndicationMode
     }
-    
+
     /// Function that consumes the resolved `UpdatePresentation` and triggers
     /// showing of hard update, soft update, or skips presentation entirely.
     private func present(_ presentation: UpdatePresentation) {
@@ -92,7 +91,7 @@ public final class VersionVerifier {
             break
         }
     }
-    
+
     /// Shows the given screen for a hard update.
     ///
     /// > Warning: This replaces the current window's root view controller.
@@ -103,7 +102,7 @@ public final class VersionVerifier {
 
         currentWindow.rootViewController = screen
     }
-    
+
     /// Shows the given screen for a soft update.
     ///
     /// Adds an additional window above the current window. You can dismiss this window by
@@ -145,7 +144,7 @@ public final class VersionVerifier {
             DispatchQueue.main.async { MainActor.assumeIsolated { work() } }
         }
     }
-    
+
     /// Function that dismiss soft update screen, by removing screen's window
     private func dismissScreen(_ screen: SoftUpdateScreenType?) {
         do {
@@ -161,10 +160,10 @@ public final class VersionVerifier {
         guard let topViewController = keyWindow?.rootViewController?.nz.topController else {
             return
         }
-        
+
         topViewController.present(alert, animated: true)
     }
-    
+
     /// Start loading indication
     private func startLoading() {
         switch loadingIndicationMode {
@@ -176,7 +175,7 @@ public final class VersionVerifier {
         case .none: break
         }
     }
-    
+
     /// Stop loading indication
     private func stopLoading() {
         switch loadingIndicationMode {
@@ -188,7 +187,7 @@ public final class VersionVerifier {
         case .none: break
         }
     }
-    
+
     /// Checks the installed app version against every configured provider and presents the
     /// resolved update.
     ///
@@ -262,6 +261,12 @@ private final class ResultsBox: @unchecked Sendable {
     private let lock = NSLock()
     private var results: [Result<VersionProviderResult, VersionVerifierError>?]
 
+    var collected: [Result<VersionProviderResult, VersionVerifierError>] {
+        lock.lock()
+        defer { lock.unlock() }
+        return results.compactMap { $0 }
+    }
+
     init(count: Int) {
         results = Array(repeating: nil, count: count)
     }
@@ -270,11 +275,5 @@ private final class ResultsBox: @unchecked Sendable {
         lock.lock()
         results[index] = value
         lock.unlock()
-    }
-
-    var collected: [Result<VersionProviderResult, VersionVerifierError>] {
-        lock.lock()
-        defer { lock.unlock() }
-        return results.compactMap { $0 }
     }
 }

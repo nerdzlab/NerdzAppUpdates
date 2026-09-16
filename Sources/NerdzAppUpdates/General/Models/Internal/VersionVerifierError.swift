@@ -1,6 +1,6 @@
 //
 //  VersionVerifierError.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 12.07.2021.
 //

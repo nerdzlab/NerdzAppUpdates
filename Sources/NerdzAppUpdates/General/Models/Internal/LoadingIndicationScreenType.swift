@@ -1,6 +1,6 @@
 //
 //  LoadingIndicationScreenType.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 16.07.2021.
 //
