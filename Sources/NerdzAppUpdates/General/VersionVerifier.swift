@@ -100,22 +100,36 @@ public final class VersionVerifier {
         (screen as? UIViewController)?.nz.presentAsOverlay()
         // `onDissmiss`/`animateDissapear` are typed via the now-`@Sendable`
         // `VersionVerifierEmptyAction`, so the compiler can no longer infer that these closure
-        // bodies inherit the enclosing @MainActor isolation. In practice they are always invoked
-        // from the main-actor-isolated `SoftUpdateScreenType` UI code, so `MainActor.assumeIsolated`
-        // asserts that known invariant to call the @MainActor `dismissScreen(_:)` synchronously.
+        // bodies inherit the enclosing @MainActor isolation. Unlike the `notify(queue: .main)`
+        // site, a third-party `SoftUpdateScreenType` conformer may invoke these callbacks off the
+        // main thread, so we cannot assert isolation (which would hard-trap). Hop to the main actor
+        // via `onMain(_:)`, which stays synchronous when already on main (preserving dismiss /
+        // animation ordering) and safely dispatches otherwise.
         screen.onDissmiss = { [weak screen, weak self] in
-            MainActor.assumeIsolated {
+            self?.onMain {
+                guard let self else { return }
                 if animated {
                     screen?.animateDissapear { [weak screen, weak self] in
-                        MainActor.assumeIsolated {
-                            self?.dismissScreen(screen)
-                        }
+                        self?.onMain { self?.dismissScreen(screen) }
                     }
                 }
                 else {
-                    self?.dismissScreen(screen)
+                    self.dismissScreen(screen)
                 }
             }
+        }
+    }
+
+    /// Runs `work` on the main actor, synchronously if already on the main thread (preserving
+    /// call ordering) and via `DispatchQueue.main.async` otherwise. Used for UI callbacks whose
+    /// caller thread is not guaranteed, so an off-main invocation is handled instead of trapping.
+    /// `nonisolated` so it can be entered from the nonisolated `@Sendable` UI callback closures.
+    private nonisolated func onMain(_ work: @escaping @Sendable @MainActor () -> Void) {
+        if Thread.isMainThread {
+            MainActor.assumeIsolated { work() }
+        }
+        else {
+            DispatchQueue.main.async { work() }
         }
     }
     
