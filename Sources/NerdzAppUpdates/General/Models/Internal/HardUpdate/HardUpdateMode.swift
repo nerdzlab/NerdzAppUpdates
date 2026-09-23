@@ -1,17 +1,18 @@
 //
 //  HardUpdateMode.swift
-//  
+//
 //
 //  Created by Roman Kovalchuk on 12.07.2021.
 //
 
 import UIKit
 
-/// Enum with different types that can be used for hard update
+/// How ``VersionVerifier`` should present a required (blocking) update.
 public enum HardUpdateMode {
-    /// present screen
+    /// Presents the given screen as the window's root view controller.
     case screen(HardUpdateScreenType)
-    
-    /// execute closure when update is required
+
+    /// Calls the given closure, passing the latest available version string, when a hard update
+    /// is required.
     case custom(VersionVerifierStringAction)
 }

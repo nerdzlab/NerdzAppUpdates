@@ -10,7 +10,8 @@ let package = Package(
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "NerdzAppUpdates",
-            targets: ["NerdzAppUpdates"]),
+            targets: ["NerdzAppUpdates"]
+        ),
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -29,6 +30,14 @@ let package = Package(
                 .product(name: "NerdzNetworking", package: "NerdzNetworking"),
                 .product(name: "Version", package: "Version"),
                 .product(name: "FirebaseRemoteConfig", package: "Firebase")
+            ]
+        ),
+        .testTarget(
+            name: "NerdzAppUpdatesTests",
+            dependencies: [
+                "NerdzAppUpdates",
+                .product(name: "Version", package: "Version"),
+                .product(name: "FirebaseCore", package: "Firebase")
             ]
         )
     ]

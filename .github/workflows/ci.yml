@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install lint tools
+        run: brew install swiftlint swiftformat
+
+      - name: SwiftLint
+        run: swiftlint --strict
+
+      - name: SwiftFormat lint
+        run: swiftformat Sources Tests --lint
+
+  test:
+    name: Build and test (iOS Simulator)
+    runs-on: macos-15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Show environment
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Test
+        run: bash scripts/test-ios.sh
+
+      - name: Build with complete strict concurrency
+        run: bash scripts/strict-concurrency.sh

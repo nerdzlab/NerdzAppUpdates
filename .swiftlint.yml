@@ -1,0 +1,153 @@
+included:
+  - Sources
+  - Tests
+
+excluded:
+  - .build
+  - .swiftpm
+  - DerivedData
+  - Pods
+
+disabled_rules:
+  - trailing_closure
+  - sorted_imports
+  - opening_brace
+
+# `discouraged_none_name` is intentionally left out of opt_in_rules: this
+# package's public API already uses `.none` on LoadingIndicationMode and
+# UpdatePresentation, and renaming a public enum case is out of scope here.
+
+opt_in_rules:
+  - attributes
+  - closure_body_length
+  - closure_spacing
+  - collection_alignment
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - contains_over_first_not_nil
+  - contains_over_range_nil_comparison
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - enum_case_associated_values_count
+  - explicit_init
+  - fatal_error_message
+  - file_name_no_space
+  - first_where
+  - flatmap_over_map_reduce
+  - implicit_return
+  - indentation_width
+  - last_where
+  - modifier_order
+  - multiline_arguments
+  - multiline_parameters
+  - overridden_super_call
+  - prefer_self_in_static_references
+  - prefer_self_type_over_type_of_self
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - sorted_first_last
+  - toggle_bool
+  - type_contents_order
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+
+line_length:
+  warning: 230
+  error: 250
+
+file_length:
+  warning: 1500
+  error: 2500
+
+type_body_length:
+  warning: 1500
+  error: 4000
+
+function_body_length:
+  warning: 150
+  error: 400
+
+closure_body_length:
+  warning: 100
+  error: 200
+
+identifier_name:
+  max_length:
+    error: 60
+  min_length:
+    error: 1
+  excluded:
+    - id
+    - x
+    - y
+    - i
+
+type_name:
+  max_length:
+    error: 100
+  min_length:
+    warning: 3
+
+large_tuple:
+  warning: 3
+  error: 4
+
+attributes:
+  always_on_same_line:
+    - "@IBAction"
+    - "@NSManaged"
+
+implicit_return:
+  included:
+    - function
+    - closure
+    - getter
+
+modifier_order:
+  preferred_modifier_order:
+    - override
+    - acl
+    - setterACL
+    - dynamic
+    - mutators
+    - lazy
+    - final
+    - required
+    - convenience
+    - typeMethods
+    - owned
+
+type_contents_order:
+  order:
+    - case
+    - type_alias
+    - associated_type
+    - subtype
+    - type_property
+    - instance_property
+    - ib_inspectable
+    - ib_outlet
+    - ib_action
+    - subscript
+    - initializer
+    - deinitializer
+    - view_life_cycle_method
+    - type_method
+    - other_method
+
+computed_accessors_order:
+  order: get_set
+
+indentation_width:
+  indentation_width: 4
+
+# Existing code places `else`/`catch` on their own line rather than
+# `} else {` / `} catch {`; match that instead of churning every file.
+statement_position:
+  statement_mode: uncuddled_else
+
+# `FirebaseConfigVersionProvider.Constants.Keys` is an intentional two-level
+# namespacing enum; allow nested types one level deeper than the rule default.
+nesting:
+  type_level: 2

@@ -76,11 +76,33 @@ Key points:
 * `softUpdateMode` supports `.screen(_:animated:)`, `.alert(_:)`, and `.custom(_:)`.
 * `hardUpdateMode` supports `.screen(_:)` and `.custom(_:)`. The screen variant replaces the key window's root view controller, so the user cannot dismiss it without updating.
 
+## Async usage
+
+`VersionVerifier` also exposes an `async` API that returns the same `Result` the completion handler receives. Both APIs are `@MainActor` isolated, so call them from the main actor (for example from a SwiftUI `.task` or an `async` `AppDelegate` method).
+
+```swift
+@MainActor
+private func verifyVersion() async {
+    let result = await versionVerifier.verifyVersion()
+
+    guard case .failure(let error) = result else {
+        return
+    }
+    showError(error.localizedDescription)
+}
+```
+
+Custom `VersionProviderType` conformers do not need to implement `verifyAppVersion() async` themselves. A default implementation bridges it to `verifyAppVersion(completion:)`, so existing providers keep compiling unchanged.
+
 ## Pay attention
 
-1. Keep a strong reference to the `VersionVerifier` instance until `verifyVersion` calls back. If the object is deallocated mid-check, the completion never fires.
+1. Keep a strong reference to the `VersionVerifier` instance until `verifyVersion` calls back. If the object is deallocated mid-check, the completion never fires, and an awaiting `verifyVersion() async` call never resumes.
 2. When using `AppStoreVersionProvider`, pass the correct country in the initializer. The default country list lives in [`AppStoreCountry.swift`](Sources/NerdzAppUpdates/VersionProviders/AppStore/AppStoreCountry.swift).
 3. The hard update flow swaps the key window's root view controller. Make sure any global state (analytics, background tasks) tolerates that.
+
+## Breaking changes in 3.0.0
+
+`VersionVerifier` is now `@MainActor` isolated and `final`, `VersionProviderType` now refines `Sendable`, and `FirebaseConfigVersionProvider` now reads the `recommendedVersion` key by default (previously it incorrectly read `requiredVersion` for both thresholds). See [`CHANGELOG.md`](CHANGELOG.md) for the full list of breaking and behavior changes before upgrading.
 
 ## License
 
