@@ -41,7 +41,9 @@ jobs:
 
   docs:
     name: Build and deploy DocC
-    runs-on: macos-15
+    # Unpinned, unlike the CI jobs, because DocC's symbol link disambiguation
+    # syntax moves with Xcode and the catalogs are authored against the current one.
+    runs-on: macos-latest
     permissions:
       pages: write
       id-token: write
