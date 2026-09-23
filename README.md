@@ -1,5 +1,7 @@
 # NerdzAppUpdates
 
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://nerdzlab.github.io/NerdzAppUpdates/documentation/nerdzappupdates/)
+
 ## About
 
 NerdzAppUpdates is a Swift package that lets an iOS app check whether the installed version is up to date with a distribution service. It supports two update flavors: hard updates (the user must update before continuing) and soft updates (the user is prompted but can skip).
