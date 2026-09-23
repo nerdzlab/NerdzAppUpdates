@@ -109,25 +109,38 @@ public final class VersionVerifier {
     /// calling `onDissmiss` in your screen, and animate dismissal by implementing
     /// `animateDissapear`.
     private func showScreenForSoftUpdate(_ screen: SoftUpdateScreenType, animated: Bool) {
-        (screen as? UIViewController)?.nz.presentAsOverlay()
-        // `onDissmiss`/`animateDissapear` are typed via the now-`@Sendable`
-        // `VersionVerifierEmptyAction`, so the compiler can no longer infer that these closure
-        // bodies inherit the enclosing @MainActor isolation. Unlike the `notify(queue: .main)`
-        // site, a third-party `SoftUpdateScreenType` conformer may invoke these callbacks off the
-        // main thread, so we cannot assert isolation (which would hard-trap). Hop to the main actor
-        // via `onMain(_:)`, which stays synchronous when already on main (preserving dismiss /
-        // animation ordering) and safely dispatches otherwise.
+        let controller: UIViewController = screen
+        controller.nz.presentAsOverlay()
+
         screen.onDissmiss = { [weak screen, weak self] in
-            self?.onMain {
-                guard let self else { return }
-                if animated {
-                    screen?.animateDissapear { [weak screen, weak self] in
-                        self?.onMain { self?.dismissScreen(screen) }
-                    }
-                }
-                else {
-                    self.dismissScreen(screen)
-                }
+            guard let screen, let self else {
+                return
+            }
+
+            onMain {
+                self.dismissSoftUpdateScreen(screen, animated: animated)
+            }
+        }
+    }
+
+    /// Dismisses the soft update screen, animating it away first when `animated` is `true`.
+    ///
+    /// `animateDissapear` is typed via the `@Sendable` ``VersionVerifierEmptyAction``, so a
+    /// third-party ``SoftUpdateScreenType`` conformer may call its completion off the main thread.
+    /// The completion therefore hops back through ``onMain(_:)`` instead of asserting isolation.
+    private func dismissSoftUpdateScreen(_ screen: SoftUpdateScreenType, animated: Bool) {
+        guard animated else {
+            dismissScreen(screen)
+            return
+        }
+
+        screen.animateDissapear { [weak screen, weak self] in
+            guard let screen, let self else {
+                return
+            }
+
+            onMain {
+                self.dismissScreen(screen)
             }
         }
     }
@@ -146,9 +159,11 @@ public final class VersionVerifier {
     }
 
     /// Function that dismiss soft update screen, by removing screen's window
-    private func dismissScreen(_ screen: SoftUpdateScreenType?) {
+    private func dismissScreen(_ screen: SoftUpdateScreenType) {
+        let controller: UIViewController = screen
+
         do {
-            try (screen as? UIViewController)?.nz.dismissOverlay()
+            try controller.nz.dismissOverlay()
         }
         catch {
             Self.logger.error("Failed to dismiss soft update overlay")
@@ -168,7 +183,8 @@ public final class VersionVerifier {
     private func startLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            (screen as? UIViewController)?.nz.presentAsOverlay()
+            let controller: UIViewController = screen
+            controller.nz.presentAsOverlay()
             screen.startLoading()
         case .custom(let onStartLoading, _):
             onStartLoading?()
@@ -180,7 +196,8 @@ public final class VersionVerifier {
     private func stopLoading() {
         switch loadingIndicationMode {
         case .screen(let screen):
-            try? (screen as? UIViewController)?.nz.dismissOverlay()
+            let controller: UIViewController = screen
+            try? controller.nz.dismissOverlay()
             screen.stopLoading()
         case .custom(_, let onStopLoading):
             onStopLoading?()

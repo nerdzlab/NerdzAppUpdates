@@ -41,5 +41,5 @@ jobs:
       - name: Test
         run: bash scripts/test-ios.sh
 
-      - name: Build with complete strict concurrency
+      - name: Strict concurrency gate (fails on any warning in Sources)
         run: bash scripts/strict-concurrency.sh
