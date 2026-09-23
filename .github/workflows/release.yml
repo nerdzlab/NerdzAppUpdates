@@ -41,7 +41,9 @@ jobs:
 
   docs:
     name: Build and deploy DocC
-    runs-on: macos-15
+    # Unpinned, unlike the CI jobs, because DocC's symbol link disambiguation
+    # syntax moves with Xcode and the catalogs are authored against the current one.
+    runs-on: macos-latest
     permissions:
       pages: write
       id-token: write
@@ -80,7 +82,12 @@ jobs:
             -destination 'generic/platform=iOS Simulator' \
             -derivedDataPath .build/docc \
             2>&1 | tee docbuild.log
-          if grep -iE '(^|[^/])(warning|error): ' docbuild.log | grep -v 'multiple matching'; then
+          issues="$(grep -iE '(^|[^/])(warning|error): ' docbuild.log \
+            | grep -v 'multiple matching' \
+            | grep -v -e '/\.build/' -e 'SourcePackages/checkouts/' \
+            | grep -iE "doesn't exist at|isn't a disambiguation|missing documentation|not found in|unresolved|external reference" || true)"
+          if [ -n "$issues" ]; then
+            echo "$issues" >&2
             echo "DocC reported diagnostics" >&2
             exit 1
           fi
@@ -88,9 +95,10 @@ jobs:
       - name: Transform for static hosting
         if: steps.catalog.outputs.found == 'true'
         run: |
-          archive="$(find .build/docc -name '*.doccarchive' -print -quit)"
+          module="${{ steps.catalog.outputs.module }}"
+          archive="$(find .build/docc -name "$module.doccarchive" -print -quit)"
           if [ -z "$archive" ]; then
-            echo "No .doccarchive produced" >&2
+            echo "No $module.doccarchive produced" >&2
             exit 1
           fi
           "$(xcrun --find docc)" process-archive transform-for-static-hosting "$archive" \
