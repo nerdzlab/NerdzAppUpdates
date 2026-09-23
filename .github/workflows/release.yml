@@ -17,7 +17,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -50,7 +50,7 @@ jobs:
       url: ${{ steps.deploy.outputs.page_url }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Show environment
         run: |
@@ -99,11 +99,11 @@ jobs:
 
       - name: Upload artifact
         if: steps.catalog.outputs.found == 'true'
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: _site
 
       - name: Deploy to Pages
         if: steps.catalog.outputs.found == 'true'
         id: deploy
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
